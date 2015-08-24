@@ -11,7 +11,7 @@ lib_LTLIBRARIES = libAltOIDSockets.la
 libAltOIDSockets_la_SOURCES = socket_udp.cpp ThreadingControl/threaded_stream_acceptor.cpp ThreadingControl/threaded_client_control.cpp socket_unix.cpp SOSProtocol404/SOSProtocol404Socket.cpp socket.cpp datagram_socket.cpp socket_tcp.cpp stream_socket.cpp
 
 # Linker options libTestProgram
-libAltOIDSockets_la_LDFLAGS = 
+libAltOIDSockets_la_LDFLAGS = -lAltOIDMutex
 
 # Compiler options. Here we are adding the include directory
 # to be searched for headers included in the source code.
