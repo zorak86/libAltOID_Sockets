@@ -1,3 +1,17 @@
+.project
+.cproject
+.settings/*
+aclocal.m4
+autom4te.cache/*
+config.guess
+config.h.in
+config.sub
+configure
+depcomp
+install-sh
+missing
+Makefile.in
+
 # Compiled Object files
 *.slo
 *.lo
