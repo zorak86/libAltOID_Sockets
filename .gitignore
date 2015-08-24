@@ -11,6 +11,7 @@ depcomp
 install-sh
 missing
 Makefile.in
+ltmain.sh
 
 # Compiled Object files
 *.slo
