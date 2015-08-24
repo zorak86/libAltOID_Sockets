@@ -1,6 +1,6 @@
 # libAltOID_Socket
 
-Alternative OpenSource Socket Library - by 
+Alternative OpenSource Socket Library - by zorak x86 
 License: LGPL v3
 Version: 1.0a
 Requires: libAltOID_Mutex
@@ -13,6 +13,7 @@ This library provides C++ abstraction on:
 - UDP Sockets
 - Unix Sockets
 
-And also provides Socket abstraction for manipulating any kind of socket using the same interface.
+And some features like:
 
-You can listen on port and connect using this library. 
+- Very basic interface for sending/manipulating data containers.
+- A class for automating listening client threads
