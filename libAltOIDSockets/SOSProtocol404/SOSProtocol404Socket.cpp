@@ -20,6 +20,11 @@ SOSProtocol404_Socket::~SOSProtocol404_Socket()
 {
 }
 
+SOSProtocol404_Socket::SOSProtocol404_Socket(Stream_Socket & sock)
+{
+	setSocket(sock.getSocket());
+}
+
 unsigned char SOSProtocol404_Socket::readU8(bool* readOK)
 {
 	unsigned char rsp[1] =

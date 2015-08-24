@@ -20,6 +20,11 @@ public:
 	 */
 	virtual ~SOSProtocol404_Socket();
 
+	/**
+	 * Copy constructor for Stream_Socket
+	 */
+	SOSProtocol404_Socket(Stream_Socket & sock);
+	
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Basic data structures...
 	/**
