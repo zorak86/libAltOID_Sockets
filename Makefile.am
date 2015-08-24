@@ -1,0 +1,2 @@
+SUBDIRS=libAltOIDSockets include
+ACLOCAL_AMFLAGS=-I m4
