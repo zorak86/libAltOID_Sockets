@@ -1,3 +1,0 @@
-# These files will end up in the install include directory
-# For example, /usr/include
-nobase_include_HEADERS = alt_sockets/datagram_socket.h alt_sockets/ThreadingControl/threaded_client_control.h alt_sockets/ThreadingControl/threaded_stream_acceptor.h alt_sockets/socket_unix.h alt_sockets/socket.h alt_sockets/stream_socket.h alt_sockets/SOSProtocol404/SOSProtocol404Socket.h alt_sockets/socket_udp.h alt_sockets/socket_tcp.h

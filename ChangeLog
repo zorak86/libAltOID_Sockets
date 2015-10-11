@@ -1,2 +1,7 @@
+Version 2.0.0
+- TLS Support
+- Shared pointers support
+Version 1.0.1
+- Translated to QMake
 Version 1.0a
 - First Release.
