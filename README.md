@@ -2,13 +2,13 @@
 
 Alternative OpenSource Socket Library - by zorak x86   
 License: LGPL v3  
-Version: 2.0.1 (untested library)
-Requires: libAltOID_Mutex  
+Version: 2.0.1
+Requires: libAltOID_Mutex libpthread libssl libcrypto
 
 ## Usage
 
 You should compile with the following flags (or use the .pc)
--L$$PREFIX/lib -lAltOID_Sockets -lssl -lcrypto
+-lAltOID_Sockets -lssl -lcrypto -lAltOID_Mutex -lpthread
 
 ## Functionality
 
