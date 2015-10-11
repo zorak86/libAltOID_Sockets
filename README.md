@@ -12,7 +12,7 @@ You should compile with the following flags (or use the .pc)
 
 ## Functionality
 
-This library provides C++ abstraction on:  
+This library provides C++ abstraction on:
 
 - TCP Sockets
 - TLS Sockets
