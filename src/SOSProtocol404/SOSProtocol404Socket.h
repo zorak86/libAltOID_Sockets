@@ -9,7 +9,7 @@
  * defines a set of functions to send/recv common C/C++ elements using streamable protocols (TCP/UNIX Sockets).
  * this does not defines protocol version, and the synchronization should be handled by the user.
  */
-class SOSProtocol404_Socket : private Stream_Socket {
+class SOSProtocol404_Socket {
 public:
 	/**
 	 * Protocol class constructor
@@ -20,11 +20,11 @@ public:
 	 */
 	virtual ~SOSProtocol404_Socket();
 
-	/**
-	 * Copy constructor for Stream_Socket
-	 */
-	SOSProtocol404_Socket(Stream_Socket & sock);
-	
+    /**
+     * Copy constructor for Stream_Socket
+     */
+    void setSocket(Stream_Socket * sock);
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Basic data structures...
 	/**
@@ -174,6 +174,8 @@ public:
 
 private:
     int read64KBlockDelim(unsigned char * block, unsigned char* delim, uint16_t delimBytes, unsigned int blockNo);
+
+    Stream_Socket * sock;
 };
 
 #endif /* SOSPROTOCOL404_H_ */
