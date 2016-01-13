@@ -116,14 +116,14 @@ public:
 	 */
     bool readBlock16(void * data, uint16_t datalen, bool keepDataLen = false);
     /**
-	 * Read and allocate a memory space data block of maximum of 64k bytes (teotherical).
+     * Read and allocate a memory space data block of maximum of 2^sizel bytes (teotherical).
 	 * NOTE: Allocation occurs with new [], so delete it with delete []
 	 * @param datalen in: maximum data length supported, out: data retrieved.
 	 * @return memory allocated with the retrieved data or NULL if failed.
      */
-    void * readBlock16WAlloc(uint16_t * datalen);
+    void * readBlockWAlloc(uint32_t * datalen, unsigned char sizel = 8);
 
-    //////////////////////////////// 8
+    ////////////////////////////////
 	/**
 	 * Write data block of maximum of 256 bytes (teotherical).
 	 * @param data data block bytes
@@ -139,13 +139,7 @@ public:
 	 * @return true if succeed.
 	 */
     bool readBlock8(void * data, uint8_t datalen, bool keepDataLen = false);
-    /**
-	 * Read and allocate a memory space data block of maximum of 256 bytes (teotherical).
-	 * NOTE: Allocation occurs with new [], so delete it with delete []
-	 * @param datalen in: maximum data length supported, out: data retrieved.
-	 * @return memory allocated with the retrieved data or NULL if failed.
-     */
-    void * readBlock8WAlloc(uint8_t * datalen);
+
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Null terminated strings:
@@ -153,18 +147,13 @@ public:
      * Read a std::string of maximum 65kb.
      * @return string with the data contained inside
      */
-    std::string readString16(bool *readOK=0x0);
+    std::string readString(bool *readOK=0x0, unsigned char sizel = 8);
     /**
      * Write a std::string of maximum 65kb.
      * @param str string to be sent.
      * @return true if success
      */
     bool writeString16(const std::string & str);
-    /**
-     * Read a std::string of maximum 256 bytes.
-     * @return string with the data contained inside
-     */
-    std::string readString8(bool *readOK=0x0);
     /**
      * Write a std::string of maximum 256 bytes.
      * @param str string to be sent.
