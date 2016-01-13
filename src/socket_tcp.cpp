@@ -324,7 +324,7 @@ bool Socket_TCP::listenOn(uint16_t port, const char * listenOnAddr, bool useIPv4
 
     if (listen(getSocket(), backlog) < 0)
     {
-        lastError = "bind() failed";
+        lastError = "listen() failed";
         closeSocket();
         return false;
     }
