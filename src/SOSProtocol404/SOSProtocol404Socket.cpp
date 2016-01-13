@@ -6,6 +6,7 @@
 #include "SOSProtocol404Socket.h"
 #include <arpa/inet.h>
 #include <string.h>
+#include <ctgmath>
 
 using namespace std;
 
@@ -287,7 +288,7 @@ bool SOSProtocol404_Socket::readBlock8(void* data, uint8_t datalen,
 
 string SOSProtocol404_Socket::readString(bool *readOK, unsigned char sizel)
 {
-    uint32_t receivedBytes = (2^sizel)-1;
+    uint32_t receivedBytes = pow(2,(unsigned int)sizel)-1;
 
     if (readOK) *readOK = true;
 
