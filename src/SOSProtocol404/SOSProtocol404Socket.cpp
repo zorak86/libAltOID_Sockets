@@ -240,7 +240,7 @@ void* SOSProtocol404_Socket::readBlock16WAlloc(uint16_t* datalen)
         bool ok = sock->readBlock(odata, len);
 		if (!ok)
 		{
-			delete odata;
+            delete [] odata;
 			*datalen = 0;
 			return NULL;
 		}
@@ -288,7 +288,7 @@ void* SOSProtocol404_Socket::readBlock8WAlloc(uint8_t* datalen)
         bool ok = sock->readBlock(odata, len);
 		if (!ok)
 		{
-			delete odata;
+            delete [] odata;
 			*datalen = 0;
 			return NULL;
 		}
