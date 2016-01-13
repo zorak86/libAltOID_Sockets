@@ -74,7 +74,7 @@ bool Stream_Socket::readBlock(void *data, uint32_t datalen)
     int total_recv_bytes = 0;
     int local_recv_bytes = 0;
 
-    if (datalen<=0) return true;
+    if (datalen==0) return true;
 
     // Try to receive the maximum amount of data left.
     while ( (datalen - total_recv_bytes)>0 // there are bytes to read.

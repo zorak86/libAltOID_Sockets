@@ -230,6 +230,7 @@ void* SOSProtocol404_Socket::readBlock16WAlloc(uint16_t* datalen)
 	uint16_t len;
 	if ((len = readU16(&readOK)) != 0 && readOK)
 	{
+        len++; // NULL TERMINATION
 		if (*datalen < len)  // len received exceeded the max datalen permited.
 		{
 			*datalen = 0;
@@ -239,10 +240,11 @@ void* SOSProtocol404_Socket::readBlock16WAlloc(uint16_t* datalen)
         *datalen = len;
 
 		// download and resize
-		unsigned char * odata = new unsigned char[len];
+        unsigned char * odata = new unsigned char[len];
+        odata[len-1]=0;
 		if (!odata)
             return NULL; // not enough memory.
-        bool ok = sock->readBlock(odata, len);
+        bool ok = sock->readBlock(odata, len-1);
 		if (!ok)
 		{
             delete [] odata;
@@ -284,6 +286,7 @@ void* SOSProtocol404_Socket::readBlock8WAlloc(uint8_t* datalen)
 	uint8_t len;
 	if ((len = readU8(&readOK)) != 0 && readOK)
 	{
+        len++; // NULL TERMINATION
 		if (*datalen < len)  // len received exceeded the max datalen permited.
 		{
 			*datalen = 0;
@@ -294,9 +297,10 @@ void* SOSProtocol404_Socket::readBlock8WAlloc(uint8_t* datalen)
 
 		// download and resize
 		unsigned char * odata = new unsigned char[len];
+        odata[len-1]=0;
 		if (!odata)
             return NULL; // not enough memory.
-        bool ok = sock->readBlock(odata, len);
+        bool ok = sock->readBlock(odata, len-1);
 		if (!ok)
 		{
             delete [] odata;
