@@ -224,6 +224,8 @@ bool SOSProtocol404_Socket::readBlock16(void* data, uint16_t datalen,
 
 void* SOSProtocol404_Socket::readBlock16WAlloc(uint16_t* datalen)
 {
+    if (!datalen) return NULL;
+
 	bool readOK;
 	uint16_t len;
 	if ((len = readU16(&readOK)) != 0 && readOK)
@@ -233,6 +235,9 @@ void* SOSProtocol404_Socket::readBlock16WAlloc(uint16_t* datalen)
 			*datalen = 0;
 			return NULL;
 		}
+
+        *datalen = len;
+
 		// download and resize
 		unsigned char * odata = new unsigned char[len];
 		if (!odata)
@@ -246,6 +251,7 @@ void* SOSProtocol404_Socket::readBlock16WAlloc(uint16_t* datalen)
 		}
 		return odata;
 	}
+    *datalen = 0;
     return NULL;
 }
 
@@ -272,6 +278,8 @@ bool SOSProtocol404_Socket::readBlock8(void* data, uint8_t datalen,
 
 void* SOSProtocol404_Socket::readBlock8WAlloc(uint8_t* datalen)
 {
+    if (!datalen) return NULL;
+
 	bool readOK;
 	uint8_t len;
 	if ((len = readU8(&readOK)) != 0 && readOK)
@@ -281,6 +289,9 @@ void* SOSProtocol404_Socket::readBlock8WAlloc(uint8_t* datalen)
 			*datalen = 0;
 			return NULL;
 		}
+
+        *datalen = len;
+
 		// download and resize
 		unsigned char * odata = new unsigned char[len];
 		if (!odata)
@@ -294,6 +305,7 @@ void* SOSProtocol404_Socket::readBlock8WAlloc(uint8_t* datalen)
 		}
 		return odata;
 	}
+    *datalen = 0;
     return NULL;
 }
 
@@ -301,10 +313,15 @@ std::string SOSProtocol404_Socket::readString16(bool* readOK)
 {
 	uint16_t maxLen = 65535;
 	char * data = (char *)readBlock16WAlloc(&maxLen);
-	if (!data) return "";
+    if (!data)
+    {
+        if (readOK) *readOK = false;
+        return "";
+    }
 	std::string v(data,maxLen);
 	delete [] data;
-	return v;
+    if (readOK) *readOK = true;
+    return v;
 }
 
 bool SOSProtocol404_Socket::writeString16(const std::string& str)
@@ -317,10 +334,15 @@ std::string SOSProtocol404_Socket::readString8(bool* readOK)
 {
 	uint8_t maxLen = 255;
 	char * data = (char *)readBlock8WAlloc(&maxLen);
-	if (!data) return "";
+    if (!data)
+    {
+        if (readOK) *readOK = false;
+        return "";
+    }
 	std::string v(data,maxLen);
 	delete [] data;
-	return v;
+    if (readOK) *readOK = true;
+    return v;
 }
 
 bool SOSProtocol404_Socket::writeString8(const std::string& str)
