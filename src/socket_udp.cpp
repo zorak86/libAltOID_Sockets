@@ -1,11 +1,17 @@
 #include "socket_udp.h"
 #include <sys/types.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-
-#include <netdb.h>
 #include <stdio.h>
 #include <string.h>
+
+#ifdef _WIN32
+#include "win32compat/win32netcompat.h"
+#include <winsock2.h>
+#include <Ws2tcpip.h>
+#else
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#endif
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////                        UDP                                     /////////////////////
@@ -83,7 +89,11 @@ bool Socket_UDP::connectTo(const char * hostname, uint16_t port, uint32_t timeou
 
 	// Initialize the memory.
 	memset(&hints, 0x00, sizeof(hints));
-	hints.ai_flags = AI_NUMERICSERV;
+#ifdef _WIN32
+    hints.ai_flags = 0;
+#else
+    hints.ai_flags = AI_NUMERICSERV;
+#endif
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_DGRAM;
 
@@ -142,7 +152,11 @@ bool Socket_UDP::writeBlock(const void *data, uint32_t datalen)
 {
     if (!isValidSocket()) return false;
 	if (!res) return false;
+#ifdef _WIN32
+    if (sendto(getSocket(), (char *)data, datalen, 0, res->ai_addr, res->ai_addrlen) == -1)
+#else
     if (sendto(getSocket(), data, datalen, 0, res->ai_addr, res->ai_addrlen) == -1)
+#endif
 	{
 		return false;
 	}
@@ -170,7 +184,12 @@ std::shared_ptr<DatagramBlock> Socket_UDP::readDatagramBlock()
     socklen_t fromlen = SOCKADDR_IN_SIZE;
 
     char bigBlock[65536];
+#ifdef _WIN32
+    (*datagramBlock).datalen = recvfrom(getSocket(), bigBlock, 65536, 0, &((*datagramBlock).addr) , &fromlen);
+#else
     (*datagramBlock).datalen = recvfrom(getSocket(), (void *) bigBlock, 65536, 0, &((*datagramBlock).addr) , &fromlen);
+#endif
+
     (*datagramBlock).Copy(bigBlock, (*datagramBlock).datalen);
     return datagramBlock;
 }

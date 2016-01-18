@@ -2,9 +2,14 @@
 #define ALT_SOCKETS_DATAGRAM_SOCKET_H_
 
 #include "socket.h"
-#include <netinet/in.h>
 #include <memory>
 #include <string.h>
+
+#ifdef _WIN32
+#include <Winsock2.h>
+#else
+#include <netinet/in.h>
+#endif
 
 struct DatagramBlock
 {

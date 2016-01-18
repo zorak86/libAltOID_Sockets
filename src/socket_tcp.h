@@ -4,6 +4,10 @@
 #include "stream_socket.h"
 #include <unistd.h>
 
+#ifdef _WIN32
+#include <ws2tcpip.h>
+#endif
+
 /**
  * TCP Socket Class
  */

@@ -3,10 +3,11 @@
 
 #include "socket_tcp.h"
 #include <unistd.h>
-#include <openssl/ssl.h>
 #include <memory>
 #include <string>
+
 #include <openssl/err.h>
+#include <openssl/ssl.h>
 
 enum SSL_MODE {
     SSL_MODE_TLS_12
@@ -53,7 +54,11 @@ struct Micro_SSL {
         if (!sslHandle) return false;
         if (SSL_accept(sslHandle) != 1)
         {
+#ifndef _WIN32
             ERR_print_errors_fp (stderr);
+#else
+            //TODO: translate this into win32 compatible source.
+#endif
             return false;
         }
         else

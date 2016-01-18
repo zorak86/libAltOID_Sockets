@@ -1,16 +1,22 @@
 #include "socket_tcp.h"
 
-#include <sys/types.h>
+#ifdef _WIN32
+#include "win32compat/win32netcompat.h"
+#include <winsock2.h>
+#include <Ws2tcpip.h>
+#else
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netinet/tcp.h>
+#include <netdb.h>
+#endif
 
+#include <sys/types.h>
 #include <string.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
-#include <netdb.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////                        TCP                                     /////////////////////
@@ -28,7 +34,6 @@ void Socket_TCP::setFlag_TCP_NODELAY()
     setsockopt(getSocket(),IPPROTO_TCP, TCP_NODELAY,(char *) &flag, sizeof(int));
 }
 
-
 bool Socket_TCP::connectTo(const char * hostname, uint16_t port, uint32_t timeout)
 {
     char servport[32];
@@ -37,10 +42,14 @@ bool Socket_TCP::connectTo(const char * hostname, uint16_t port, uint32_t timeou
     struct addrinfo hints, *res=NULL;
 
     memset(&hints, 0x00, sizeof(hints));
+
+#ifdef _WIN32
+    hints.ai_flags    = 0;
+#else
     hints.ai_flags    = AI_NUMERICSERV;
+#endif
     hints.ai_family   = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
-
     rc = inet_pton(AF_INET, hostname, &serveraddr);
     if (rc == 1)
     {
@@ -180,7 +189,11 @@ bool Socket_TCP::internalConnect(int sockfd, const sockaddr *addr, socklen_t add
                 // Socket selected for write
                 socklen_t lon;
                 lon = sizeof(int);
+#ifdef _WIN32
+                if (getsockopt(sockfd, SOL_SOCKET, SO_ERROR, (char*)(&valopt), &lon) < 0)
+#else
                 if (getsockopt(sockfd, SOL_SOCKET, SO_ERROR, (void*)(&valopt), &lon) < 0)
+#endif
                 {
                     lastError = "Error in getsockopt() (??)";
                     return false;
@@ -219,8 +232,13 @@ bool Socket_TCP::internalConnect(int sockfd, const sockaddr *addr, socklen_t add
 
 bool Socket_TCP::internalPassToBlocking(int sockfd)
 {
+#ifdef _WIN32
+    int iResult;
+    u_long iMode = 0;
+    iResult = ioctlsocket(sockfd, FIONBIO, &iMode);
+    return (iResult != NO_ERROR);
+#else
     long arg;
-
     // Set to blocking mode again...
     if( (arg = fcntl(sockfd, F_GETFL, NULL)) < 0)
     {
@@ -234,10 +252,17 @@ bool Socket_TCP::internalPassToBlocking(int sockfd)
         return false;
     }
     return true;
+#endif
 }
 
 bool Socket_TCP::internalPassToNonBlocking(int sockfd)
 {
+#ifdef _WIN32
+    int iResult;
+    u_long iMode = 1;
+    iResult = ioctlsocket(sockfd, FIONBIO, &iMode);
+    return (iResult != NO_ERROR);
+#else
     long arg;
 
     // Set non-blocking
@@ -253,6 +278,7 @@ bool Socket_TCP::internalPassToNonBlocking(int sockfd)
         return false;
     }
     return true;
+#endif
 }
 
 bool Socket_TCP::listenOn(uint16_t port, const char * listenOnAddr, bool useIPv4, int recvbuffer,unsigned int backlog)

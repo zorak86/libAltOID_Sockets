@@ -12,11 +12,10 @@ SOURCES += \
     src/socket_tcp.cpp \
     src/socket_tls_tcp.cpp \
     src/socket_udp.cpp \
-    src/socket_unix.cpp \
     src/socket.cpp \
     src/stream_socket.cpp \
     src/ThreadingControl/threaded_client_control.cpp \
-    src/ThreadingControl/threaded_stream_acceptor.cpp
+    src/ThreadingControl/threaded_stream_acceptor.cpp \
 
 HEADERS += \
     src/SOSProtocol404/SOSProtocol404Socket.h \
@@ -24,7 +23,6 @@ HEADERS += \
     src/socket_tcp.h \
     src/socket_tls_tcp.h \
     src/socket_udp.h \
-    src/socket_unix.h \
     src/socket.h \
     src/stream_socket.h \
     src/ThreadingControl/threaded_client_control.h \
@@ -32,6 +30,14 @@ HEADERS += \
 
 isEmpty(PREFIX) {
     PREFIX = /usr/local
+}
+!win32 {
+    SOURCES += socket_unix.cpp
+    HEADERS += socket_unix.h
+}
+win32 {
+    SOURCES += src/win32compat/win32netcompat.cpp
+    HEADERS += src/win32compat/win32netcompat.h
 }
 
 # includes dir
@@ -42,6 +48,8 @@ INCLUDEPATH += src
 # C++ standard.
 QMAKE_CXX += -Wno-write-strings -Wno-unused-parameter -Wno-unused-function -O3 -std=c++11 -Wunused -Wno-unused-result
 # LIB DEFS:
+win32:LIBS += -LC:\Qt\Tools\mingw492_32\opt\lib -LC:\libAltOIDS_ROOT\lib -lAltOID_Mutex1 -lssl
+win32:LIBS += -lws2_32
 TARGET = AltOID_Sockets
 TEMPLATE = lib
 VERSION      = 2.0.1

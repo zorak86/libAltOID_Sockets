@@ -5,9 +5,16 @@
 #include <string.h>
 
 #include <sys/types.h>
+
+#ifdef _WIN32
+#include <winsock2.h>
+#include <Ws2tcpip.h>
+#else
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
+#endif
+
 
 
 Socket::Socket()
@@ -28,7 +35,9 @@ Socket::~Socket()
 void Socket::setUseWrite()
 {
 	// prevent the application from crash, ignore the sigpipes:
+#ifndef _WIN32
 	signal(SIGPIPE, SIG_IGN);
+#endif
 	// use write/read functions instead send/recv
 	useWrite = true;
 }
@@ -36,7 +45,11 @@ void Socket::setUseWrite()
 void Socket::setRecvBuffer(int buffsize)
 {
     if (!(*microSocket).IsValidSocket()) return;
+#ifdef _WIN32
+    setsockopt((*microSocket).socket, SOL_SOCKET, SO_RCVBUF, (char *) &buffsize, sizeof(buffsize));
+#else
     setsockopt((*microSocket).socket, SOL_SOCKET, SO_RCVBUF, &buffsize, sizeof(buffsize));
+#endif
 }
 
 bool Socket::isConnected()
@@ -144,7 +157,12 @@ bool Socket::setReadTimeout(unsigned int _timeout)
 	struct timeval timeout;
 	timeout.tv_sec = _timeout;
 	timeout.tv_usec = 0;
+
+#ifdef _WIN32
+    if ((setsockopt((*microSocket).socket, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout))) == -1)
+#else
     if ((setsockopt((*microSocket).socket, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout))) == -1)
+#endif
 	{
 		return false;
 	}

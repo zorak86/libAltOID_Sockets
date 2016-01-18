@@ -7,7 +7,12 @@
 
 #include "stream_socket.h"
 
+#ifndef _WIN32
 #include <sys/socket.h>
+#else
+#include <winsock2.h>
+#include <Ws2tcpip.h>
+#endif
 #include <string.h>
 #include <unistd.h>
 

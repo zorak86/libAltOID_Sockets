@@ -4,7 +4,11 @@
  */
 
 #include "SOSProtocol404Socket.h"
+#ifdef _WIN32
+#include <Winsock2.h>
+#else
 #include <arpa/inet.h>
+#endif
 #include <string.h>
 #include <ctgmath>
 
