@@ -72,11 +72,12 @@ bool Stream_Socket::PostAcceptSubInitialization()
     return true;
 }
 
-bool Stream_Socket::readBlock(void *data, uint32_t datalen)
+bool Stream_Socket::readBlock(void *data, uint32_t datalen, uint32_t * bytesReceived)
 {
+    if (bytesReceived) *bytesReceived = 0;
+
     if (!isValidSocket())
     {
-        printf("invalid socket BORRAME\n");
         return false;
     }
 
@@ -96,10 +97,12 @@ bool Stream_Socket::readBlock(void *data, uint32_t datalen)
 
     if ((unsigned int)total_recv_bytes<datalen)
     {
-        // bad, we had to receive at least bytes_to_read...
-        printf("bad bytes . BORRAME\n");
-        return false;
+        if (total_recv_bytes==0) return false;
+        if (bytesReceived) *bytesReceived = total_recv_bytes;
+        return true;
     }
+
+    if (bytesReceived) *bytesReceived = datalen;
 
     // Otherwise... return true.
     return true;

@@ -35,7 +35,8 @@ unsigned char SOSProtocol404_Socket::readU8(bool* readOK)
 	if (readOK)
 		*readOK = true;
 	// Receive 1 byte, if fails, readOK is setted as false.
-    if (!sock->readBlock(&rsp, 1) && readOK)
+    uint32_t r;
+    if ((!sock->readBlock(&rsp, 1, &r) || r!=1) && readOK)
 		*readOK = false;
 	return rsp[0];
 }
@@ -53,7 +54,8 @@ uint16_t SOSProtocol404_Socket::readU16(bool* readOK)
 	if (readOK)
 		*readOK = true;
 	// Receive 2 bytes (unsigned short), if fails, readOK is setted as false.
-    if (!sock->readBlock(&ret, sizeof(uint16_t)) && readOK)
+    uint32_t r;
+    if ((!sock->readBlock(&ret, sizeof(uint16_t), &r) || r!=sizeof(uint16_t)) && readOK)
 		*readOK = false;
 	ret = ntohs(ret); // Reconvert into host based integer.
 	return ret;
@@ -73,7 +75,9 @@ uint32_t SOSProtocol404_Socket::readU32(bool* readOK)
 	if (readOK)
 		*readOK = true;
 	// Receive 4 bytes (unsigned int), if fails, readOK is setted as false.
-    if (!sock->readBlock(&ret, sizeof(uint32_t)) && readOK)
+
+    uint32_t r;
+    if ((!sock->readBlock(&ret, sizeof(uint32_t), &r) || r!=sizeof(uint32_t)) && readOK)
 		*readOK = false;
 	ret = ntohl(ret); // Reconvert into host based integer.
 	return ret;
@@ -94,8 +98,7 @@ bool SOSProtocol404_Socket::writeBlock32(const void* data, uint32_t datalen)
     return (sock->writeBlock(data, datalen));
 }
 
-bool SOSProtocol404_Socket::readBlock32(void* data, uint32_t datalen,
-        bool keepDataLen)
+bool SOSProtocol404_Socket::readBlock32(void* data, uint32_t datalen, bool keepDataLen)
 {
 	bool readOK;
 	uint32_t len;
@@ -103,7 +106,8 @@ bool SOSProtocol404_Socket::readBlock32(void* data, uint32_t datalen,
 	{
 		if (len != datalen && !keepDataLen)
 			return false;
-        return sock->readBlock(data, len);
+        uint32_t r;
+        return (sock->readBlock(data, len, &r) && r==len);
 	}
 	return false;
 }
@@ -123,7 +127,8 @@ void* SOSProtocol404_Socket::readBlock32WAlloc(unsigned int* datalen)
 		unsigned char * odata = new unsigned char[len];
 		if (!odata)
             return NULL; // not enough memory.
-        bool ok = sock->readBlock(odata, len);
+        uint32_t r;
+        bool ok = sock->readBlock(odata, len,&r) && r==len;
 		if (!ok)
 		{
 			delete [] odata;
@@ -222,7 +227,8 @@ bool SOSProtocol404_Socket::readBlock16(void* data, uint16_t datalen,
 	{
 		if (len != datalen && !keepDataLen)
 			return false;
-        return sock->readBlock(data, len);
+        uint32_t r;
+        return sock->readBlock(data, len, &r) && r==len;
 	}
 	return false;
 }
@@ -253,7 +259,8 @@ void* SOSProtocol404_Socket::readBlockWAlloc(uint32_t *datalen, unsigned char si
         unsigned char * odata = new unsigned char[lenReceived];
         odata[lenReceived-1]=0;
         if (!odata) return NULL; // not enough memory.
-        bool ok = sock->readBlock(odata, lenReceived-1);
+        uint32_t r;
+        bool ok = sock->readBlock(odata, lenReceived-1, &r) && r==lenReceived-1;
 		if (!ok)
 		{
             delete [] odata;
@@ -285,7 +292,8 @@ bool SOSProtocol404_Socket::readBlock8(void* data, uint8_t datalen,
 	{
 		if (len != datalen && !keepDataLen)
 			return false;
-        return sock->readBlock(data, len);
+        uint32_t r;
+        return sock->readBlock(data, len, &r) && r==len;
 	}
     return false;
 }
