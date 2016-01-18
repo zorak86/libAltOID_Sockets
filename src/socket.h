@@ -5,6 +5,8 @@
 #include <memory>
 #include <unistd.h>
 
+#include <alt_mutex/mutex_instance.h>
+
 enum SocketType
 {
 	DATAGRAM_SOCKET,
@@ -175,8 +177,8 @@ public:
      * @return return the number of bytes read by the socket, zero for end of file and -1 for error.
      */
     virtual int partialWrite(void * data, uint32_t datalen);
-
-
+private:
+    static void socketSystemInitialization();
 
 protected:
     /**
@@ -199,6 +201,9 @@ protected:
      * socket file descriptor.
      */
     std::shared_ptr<MicroSocket> microSocket;
+
+    static Mutex_Instance sockMutex;
+    static bool socketInitialized,badSocket;
 };
 
 

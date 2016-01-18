@@ -14,11 +14,16 @@
 #include <netinet/in.h>
 #include <netinet/ip.h>
 #endif
+#include <alt_mutex/locker_mutex.h>
 
-
+Mutex_Instance Socket::sockMutex;
+bool Socket::socketInitialized = false;
+bool Socket::badSocket = false;
 
 Socket::Socket()
 {
+    socketSystemInitialization();
+
 	socketType = UNINITIALIZED_SOCKET;
 	useWrite = false;
 	lastError = "";
@@ -147,6 +152,38 @@ int Socket::partialWrite(void *data, uint32_t datalen)
     {
         ssize_t sendLen = write((*microSocket).socket, (char *) data, datalen);
         return sendLen;
+    }
+}
+
+void Socket::socketSystemInitialization()
+{
+    Locker_Mutex lm(&sockMutex);
+    if (!socketInitialized)
+    {
+#ifdef _WIN32
+        int wsaerr;
+
+        WORD wVersionRequested;
+        WSADATA wsaData;
+
+        wVersionRequested = MAKEWORD(2, 2);
+        wsaerr = WSAStartup(wVersionRequested, &wsaData);
+        if (wsaerr != 0)
+        {
+            // dll not found.
+            badSocket = true;
+            return;
+        }
+
+        if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 2 )
+        {
+            // not supported.
+            WSACleanup();
+            badSocket = true;
+            return;
+        }
+#endif
+        socketInitialized = true;
     }
 }
 
