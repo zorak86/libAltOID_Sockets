@@ -165,11 +165,20 @@ bool Socket_TCP::internalConnect(int sockfd, const sockaddr *addr, socklen_t add
     // Non-blocking connect with timeout...
     if (!internalPassToNonBlocking(sockfd)) return false;
 
+#ifdef _WIN32
+    if (timeout == 0)
+    {
+        // in windows, if the timeval is 0,0, then it will return immediately.
+        // however, our lib state that 0 represent that we sleep for ever.
+        timeout = 365*24*3600; // how about 1 year.
+    }
+#endif
+
     // Trying to connect with timeout.
     res2 = connect(sockfd, addr, addrlen);
     if (res2 < 0)
     {
-        if (errno == EINPROGRESS)
+        if (errno == EINPROGRESS || !errno)
         {
             fd_set myset;
 
@@ -224,7 +233,6 @@ bool Socket_TCP::internalConnect(int sockfd, const sockaddr *addr, socklen_t add
             return false;
         }
     }
-
     // What we are doing here?
     internalPassToBlocking(sockfd);
     return false;
@@ -236,7 +244,7 @@ bool Socket_TCP::internalPassToBlocking(int sockfd)
     int iResult;
     u_long iMode = 0;
     iResult = ioctlsocket(sockfd, FIONBIO, &iMode);
-    return (iResult != NO_ERROR);
+    return (iResult == NO_ERROR);
 #else
     long arg;
     // Set to blocking mode again...
@@ -261,7 +269,7 @@ bool Socket_TCP::internalPassToNonBlocking(int sockfd)
     int iResult;
     u_long iMode = 1;
     iResult = ioctlsocket(sockfd, FIONBIO, &iMode);
-    return (iResult != NO_ERROR);
+    return (iResult == NO_ERROR);
 #else
     long arg;
 
