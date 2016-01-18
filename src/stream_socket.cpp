@@ -27,7 +27,7 @@ Stream_Socket::~Stream_Socket()
 
 bool Stream_Socket::writeBlock(const char *data)
 {
-    return writeBlock(data,strlen(data)+1);
+    return writeBlock(data,strlen(data));
 }
 
 bool Stream_Socket::writeBlock(const void *data, uint32_t datalen)
@@ -74,7 +74,11 @@ bool Stream_Socket::PostAcceptSubInitialization()
 
 bool Stream_Socket::readBlock(void *data, uint32_t datalen)
 {
-    if (!isValidSocket()) return false;
+    if (!isValidSocket())
+    {
+        printf("invalid socket BORRAME\n");
+        return false;
+    }
 
     int total_recv_bytes = 0;
     int local_recv_bytes = 0;
@@ -93,6 +97,7 @@ bool Stream_Socket::readBlock(void *data, uint32_t datalen)
     if ((unsigned int)total_recv_bytes<datalen)
     {
         // bad, we had to receive at least bytes_to_read...
+        printf("bad bytes . BORRAME\n");
         return false;
     }
 
