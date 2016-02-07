@@ -31,9 +31,10 @@ HEADERS += \
 isEmpty(PREFIX) {
     PREFIX = /usr/local
 }
+
 !win32 {
-    SOURCES += socket_unix.cpp
-    HEADERS += socket_unix.h
+    SOURCES += src/socket_unix.cpp
+    HEADERS += src/socket_unix.h
 }
 win32 {
     SOURCES += src/win32compat/win32netcompat.cpp
