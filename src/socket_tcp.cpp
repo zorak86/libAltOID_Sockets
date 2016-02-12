@@ -145,6 +145,7 @@ Stream_Socket * Socket_TCP::acceptConnection()
         cursocket->setSocket(sdconn);
         char ipAddr[80];
         inet_ntop(AF_INET, &cli_addr.sin_addr, ipAddr, sizeof(ipAddr));
+        cursocket->setRemotePort(ntohs(cli_addr.sin_port));
         cursocket->setRemotePair(ipAddr);
     }
     // Establish the error.

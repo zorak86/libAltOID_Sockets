@@ -187,12 +187,22 @@ void Socket::socketSystemInitialization()
     }
 }
 
+unsigned short Socket::getRemotePort() const
+{
+    return remotePort;
+}
+
+void Socket::setRemotePort(unsigned short value)
+{
+    remotePort = value;
+}
+
 bool Socket::setReadTimeout(unsigned int _timeout)
 {
     if (!(*microSocket).IsValidSocket()) return false;
 
-	struct timeval timeout;
-	timeout.tv_sec = _timeout;
+    struct timeval timeout;
+    timeout.tv_sec = _timeout;
 	timeout.tv_usec = 0;
 
 #ifdef _WIN32

@@ -149,6 +149,7 @@ Stream_Socket * Socket_TLS_TCP::acceptConnection()
     char remotePair[64];
     mainSock->getRemotePair(remotePair);
     tlsSock->setRemotePair(remotePair);
+    tlsSock->setRemotePort(mainSock->getRemotePort());
     // detach, because tlsSock will rule the socket file descriptor now.
     mainSock->detachSocket();
     // now we should copy the context parameters:

@@ -119,6 +119,18 @@ public:
      */
     void setRemotePair(const char * address);
 
+    /**
+     * @brief getRemotePort Get Remote Port for listenning connections
+     * @return remote port 0-65535
+     */
+    unsigned short getRemotePort() const;
+    /**
+     * Set remote port
+     * Used by internal functions...
+     * @param value port
+     */
+    void setRemotePort(unsigned short value);
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Socket Connection elements...
     /**
@@ -177,6 +189,7 @@ public:
      * @return return the number of bytes read by the socket, zero for end of file and -1 for error.
      */
     virtual int partialWrite(void * data, uint32_t datalen);
+
 private:
     static void socketSystemInitialization();
 
@@ -197,6 +210,11 @@ protected:
      * buffer with the remote pair address.
      */
     char remotePair[64];
+    /**
+     * @brief remotePort remote port when accepting connections.
+     */
+    unsigned short remotePort;
+
     /**
      * socket file descriptor.
      */
