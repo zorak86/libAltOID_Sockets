@@ -16,6 +16,7 @@ SOURCES += \
     src/stream_socket.cpp \
     src/ThreadingControl/threaded_client_control.cpp \
     src/ThreadingControl/threaded_stream_acceptor.cpp \
+    src/Pipes/stream_pipe.cpp
 
 HEADERS += \
     src/SOSProtocol404/SOSProtocol404Socket.h \
@@ -26,7 +27,8 @@ HEADERS += \
     src/socket.h \
     src/stream_socket.h \
     src/ThreadingControl/threaded_client_control.h \
-    src/ThreadingControl/threaded_stream_acceptor.h
+    src/ThreadingControl/threaded_stream_acceptor.h \
+    src/Pipes/stream_pipe.h
 
 isEmpty(PREFIX) {
     PREFIX = /usr/local
