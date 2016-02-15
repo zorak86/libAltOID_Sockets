@@ -87,10 +87,10 @@ bool Stream_Pipe::StartPeerBlocking(unsigned char i)
     Stream_Socket * current = socket_peers[i];
     Stream_Socket * next = socket_peers[nextpeer];
 
-    unsigned int bytesReceived;
+    int bytesReceived;
     char * block = new char[blockSize];
 
-    while (current->readBlock(block,blockSize,&bytesReceived))
+    while ((bytesReceived=current->partialRead(block,blockSize))>0)
     {
         if (!next->writeBlock(block,bytesReceived))
         {
