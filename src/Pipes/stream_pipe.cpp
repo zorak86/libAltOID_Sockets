@@ -62,9 +62,9 @@ int Stream_Pipe::StartBlocking()
 {
     if (!socket_peers[0] || !socket_peers[1]) return -1;
 
-    StartPeerBlocking(0);
     pthread_t remotePeerThreadP;
     pthread_create(&remotePeerThreadP, NULL, remotePeerThread, this);
+    StartPeerBlocking(0);
     pthread_join(remotePeerThreadP,NULL);
 
     // All connections terminated.
