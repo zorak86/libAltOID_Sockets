@@ -25,7 +25,7 @@ Stream_Pipe::~Stream_Pipe()
     }
 }
 
-void pipeThread(void * _stp)
+void * pipeThread(void * _stp)
 {
     Stream_Pipe * stp = (Stream_Pipe *)_stp;
     stp->StartBlocking();
@@ -34,6 +34,7 @@ void pipeThread(void * _stp)
         delete stp;
     }
     pthread_exit(NULL);
+    return NULL;
 }
 
 bool Stream_Pipe::StartThreaded(bool _autoDelete)
@@ -49,17 +50,19 @@ bool Stream_Pipe::StartThreaded(bool _autoDelete)
     return true;
 }
 
-void remotePeerThread(void * _stp)
+void * remotePeerThread(void * _stp)
 {
     Stream_Pipe * stp = (Stream_Pipe *)_stp;
     stp->StartPeerBlocking(1);
     pthread_exit(NULL);
+    return NULL;
 }
 
 int Stream_Pipe::StartBlocking()
 {
     if (!socket_peers[0] || !socket_peers[1]) return -1;
-    stp->StartPeerBlocking(0);
+
+    StartPeerBlocking(0);
     pthread_t remotePeerThreadP;
     pthread_create(&remotePeerThreadP, NULL, remotePeerThread, this);
     pthread_join(remotePeerThreadP,NULL);

@@ -2,6 +2,8 @@
 #define STREAM_PIPE_H
 
 #include "stream_socket.h"
+#include <stdint.h>
+#include <atomic>
 
 /**
  * @brief The Stream_Pipe class connect two pipe sockets.
