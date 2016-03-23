@@ -7,6 +7,12 @@
 #include <string>
 #include <list>
 
+struct cipherBits
+{
+    int aSymBits, symBits;
+
+};
+
 class Micro_SSL
 {
 public:
@@ -29,6 +35,12 @@ public:
     size_t PartialWrite(void * buffer, size_t len);
 
     std::list<std::string> getErrorsAndClear();
+
+    std::string getCipherName();
+    cipherBits getCipherBits();
+    std::string getCipherVersion();
+    //std::string getCipherDescription();
+
 
 private:
     void parseErrors();

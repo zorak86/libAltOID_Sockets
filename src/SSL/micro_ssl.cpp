@@ -163,6 +163,23 @@ std::list<std::__cxx11::string> Micro_SSL::getErrorsAndClear()
     return r;
 }
 
+std::__cxx11::string Micro_SSL::getCipherName()
+{
+    return SSL_get_cipher_name(sslHandle);
+}
+
+cipherBits Micro_SSL::getCipherBits()
+{
+    cipherBits cb;
+    cb.aSymBits = SSL_get_cipher_bits(sslHandle, &cb.symBits);
+    return cb;
+}
+
+std::__cxx11::string Micro_SSL::getCipherVersion()
+{
+    return SSL_get_cipher_version(sslHandle);
+}
+
 void Micro_SSL::parseErrors()
 {
     char buf[512];

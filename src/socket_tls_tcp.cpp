@@ -150,6 +150,21 @@ bool Socket_TLS_TCP::setSSLPrivateKeyFile(const char *_key_file)
     return true;
 }
 
+string Socket_TLS_TCP::getCipherName()
+{
+    return ssl->getCipherNames();
+}
+
+cipherBits Socket_TLS_TCP::getCipherBits()
+{
+    return ssl->getCipherBits();
+}
+
+string Socket_TLS_TCP::getCipherVersion()
+{
+    return ssl->getCipherVersion();
+}
+
 Stream_Socket * Socket_TLS_TCP::acceptConnection()
 {
     Stream_Socket * mainSock = Socket_TCP::acceptConnection();
