@@ -13,8 +13,6 @@ public:
     Micro_SSL();
     ~Micro_SSL();
 
-
-
     void InitHandle();
     bool InitContext(bool serverMode = false);
     bool isInitialized();

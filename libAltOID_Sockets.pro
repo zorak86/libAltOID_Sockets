@@ -48,8 +48,10 @@ win32 {
 # includes dir
 QMAKE_INCDIR += $$PREFIX/include
 QMAKE_INCDIR += src
+QMAKE_INCDIR += src/SSL
 INCLUDEPATH += $$PREFIX/include
 INCLUDEPATH += src
+INCLUDEPATH += src/SSL
 # C++ standard.
 QMAKE_CXX += -Wno-write-strings -Wno-unused-parameter -Wno-unused-function -O3 -std=c++11 -Wunused -Wno-unused-result
 # LIB DEFS:

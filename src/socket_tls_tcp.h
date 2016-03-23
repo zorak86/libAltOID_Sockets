@@ -7,7 +7,7 @@
 #include <string>
 #include <list>
 
-#include "SSL/micro_ssl.h"
+#include "micro_ssl.h"
 
 enum SSL_MODE {
     SSL_MODE_TLS_12
