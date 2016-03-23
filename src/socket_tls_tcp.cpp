@@ -56,6 +56,15 @@ bool Socket_TLS_TCP::PostConnectSubInitialization()
         ssl.reset(new Micro_SSL);
         return false;
     }
+
+    if (!ssl->validateConnection())
+    {
+        sslErrors = ssl->getErrorsAndClear();
+        ssl.reset(new Micro_SSL);
+        return false;
+    }
+
+
     // connected!
     return true;
 }

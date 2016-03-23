@@ -180,6 +180,11 @@ std::__cxx11::string Micro_SSL::getCipherVersion()
     return SSL_get_cipher_version(sslHandle);
 }
 
+bool Micro_SSL::validateConnection()
+{
+    return (SSL_get_verify_result(sslHandle) != X509_V_OK);
+}
+
 void Micro_SSL::parseErrors()
 {
     char buf[512];

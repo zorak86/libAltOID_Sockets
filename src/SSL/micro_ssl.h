@@ -40,7 +40,7 @@ public:
     cipherBits getCipherBits();
     std::string getCipherVersion();
     //std::string getCipherDescription();
-
+    bool validateConnection();
 
 private:
     void parseErrors();
