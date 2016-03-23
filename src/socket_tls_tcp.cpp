@@ -25,29 +25,34 @@ void Socket_TLS_TCP::SSLPrepare()
 {
     // Register the error strings for libcrypto & libssl
     SSL_load_error_strings ();
+    ERR_load_crypto_strings();
     // Register the available ciphers and digests
     SSL_library_init ();
 }
 
 bool Socket_TLS_TCP::PostConnectSubInitialization()
 {
-    if ((*ssl).sslHandle) return false; // already connected (don't connect again)
+    if (ssl->isInitialized()) return false; // already connected (don't connect again)
 
     server = false;
+
     if (!InitSSLContext())
     {
+        sslErrors = ssl->getErrorsAndClear();
         ssl.reset(new Micro_SSL);
         return false;
     }
-    (*ssl).InitHandle();
+    ssl->InitHandle();
 
-    if (!(*ssl).SetFD(getSocket()))
+    if (!ssl->SetFD(getSocket()))
     {
+        sslErrors = ssl->getErrorsAndClear();
         ssl.reset(new Micro_SSL);
         return false;
     }
     else if (!(*ssl).Connect())
     {
+        sslErrors = ssl->getErrorsAndClear();
         ssl.reset(new Micro_SSL);
         return false;
     }
@@ -57,25 +62,28 @@ bool Socket_TLS_TCP::PostConnectSubInitialization()
 
 bool Socket_TLS_TCP::PostAcceptSubInitialization()
 {
-    if ((*ssl).sslHandle) return false; // already connected (don't connect again)
+    if (ssl->isInitialized()) return false; // already connected (don't connect again)
 
     server = true;
     if (!InitSSLContext())
     {
+        sslErrors = ssl->getErrorsAndClear();
         ssl.reset(new Micro_SSL);
         return false;
     }
 
     // ssl empty, create a new one.
-    (*ssl).InitHandle();
+    ssl->InitHandle();
 
-    if (!(*ssl).SetFD(getSocket()))
+    if (!ssl->SetFD(getSocket()))
     {
+        sslErrors = ssl->getErrorsAndClear();
         ssl.reset(new Micro_SSL);
         return false;
     }
     else if (!(*ssl).Accept())
     {
+        sslErrors = ssl->getErrorsAndClear();
         ssl.reset(new Micro_SSL);
         return false;
     }
@@ -87,25 +95,31 @@ bool Socket_TLS_TCP::PostAcceptSubInitialization()
 bool Socket_TLS_TCP::InitSSLContext()
 {
     // create new SSL Context.
-    if (server)
-    {
-        (*ssl).sslContext = SSL_CTX_new (TLSv1_2_server_method());
-        if (!(*ssl).sslContext) return false;
-    }
-    else
-    {
-        (*ssl).sslContext = SSL_CTX_new (TLSv1_2_client_method());
-        if (!(*ssl).sslContext) return false;
-    }
+    if (!ssl->InitContext(server)) return false;
 
-    if (!ca_file.empty() &&
-            SSL_CTX_use_certificate_chain_file((*ssl).sslContext, ca_file.c_str()) != 1) return false;
-    if (!crt_file.empty() &&
-            SSL_CTX_use_certificate_file((*ssl).sslContext, crt_file.c_str(), SSL_FILETYPE_PEM) != 1) return false;
-    if (!key_file.empty() &&
-            SSL_CTX_use_PrivateKey_file((*ssl).sslContext, key_file.c_str(), SSL_FILETYPE_PEM) != 1) return false;
+    if (!ca_file.empty() && !ssl->setCA(ca_file))
+    {
+        return false;
+    }
+    if (!crt_file.empty() && !ssl->setCRT(crt_file))
+    {
+        return false;
+    }
+    if (!key_file.empty() && !ssl->setKEY(key_file))
+    {
+        return false;
+    }
 
     return true;
+}
+
+std::list<std::string> Socket_TLS_TCP::getSslErrorsAndClear()
+{
+    std::list<std::string> sslErrors2 = ssl->getErrorsAndClear();
+    for (std::string & i : sslErrors2) sslErrors.push_back(i);
+    std::list<std::string> sslErrors3 = sslErrors;
+    sslErrors.clear();
+    return sslErrors3;
 }
 
 void Socket_TLS_TCP::setServer(bool value)
@@ -158,19 +172,19 @@ Stream_Socket * Socket_TLS_TCP::acceptConnection()
     if (!ca_file.empty()) tlsSock->setSSLCertificateChainFile( ca_file.c_str() );
     if (!crt_file.empty()) tlsSock->setSSLLocalCertificateFile( crt_file.c_str() );
     if (!key_file.empty()) tlsSock->setSSLPrivateKeyFile( key_file.c_str() );
+
     tlsSock->setTLSContextmode(sslMode);
     tlsSock->setServer(server);
-
 
     return tlsSock;
 }
 
 int Socket_TLS_TCP::partialRead(void *data, uint32_t datalen)
 {
-    return SSL_read((*ssl).sslHandle, data, datalen );
+    return ssl->PartialRead(data,datalen);
 }
 
 int Socket_TLS_TCP::partialWrite(void *data, uint32_t datalen)
 {
-    return SSL_write((*ssl).sslHandle, data, datalen);
+    return ssl->PartialWrite(data,datalen);
 }

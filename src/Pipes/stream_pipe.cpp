@@ -94,9 +94,12 @@ bool Stream_Pipe::StartPeerBlocking(unsigned char i)
     {
         if (!next->writeBlock(block,bytesReceived))
         {
+            socket_peers[nextpeer]->shutdownSocket();
+            finishingPeer = nextpeer;
             return true;
         }
 
+        // Update Counters:
         if (i==0) sentBytes+= bytesReceived;
         else recvBytes += bytesReceived;
     }

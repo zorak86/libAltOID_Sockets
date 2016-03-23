@@ -95,7 +95,7 @@ int Socket::closeSocket()
     return i;
 }
 
-char * Socket::getLastError() const
+const char * Socket::getLastError() const
 {
 	return lastError;
 }

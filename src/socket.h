@@ -106,7 +106,7 @@ public:
      * Get last error message
      * @param last error message pointer. (static mem)
      */
-    char * getLastError() const;
+    const char * getLastError() const;
     /**
      * Get remote pair address
      * @param address pair address char * (should contain at least 64 bytes)
@@ -205,7 +205,8 @@ protected:
     /**
      * pointer to the last error message.
      */
-    char * lastError;
+    const char * lastError;
+
     /**
      * buffer with the remote pair address.
      */
