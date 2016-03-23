@@ -184,7 +184,7 @@ bool Micro_SSL::validateConnection()
 {
     X509 *cert;
     bool bValid  = false;
-    cert = SSL_get_peer_certificate(ssl);
+    cert = SSL_get_peer_certificate(sslHandle);
     if ( cert != NULL )
     {
         long res = SSL_get_verify_result(sslHandle);
