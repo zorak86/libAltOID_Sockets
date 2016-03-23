@@ -152,7 +152,7 @@ bool Socket_TLS_TCP::setSSLPrivateKeyFile(const char *_key_file)
 
 string Socket_TLS_TCP::getCipherName()
 {
-    return ssl->getCipherNames();
+    return ssl->getCipherName();
 }
 
 cipherBits Socket_TLS_TCP::getCipherBits()
