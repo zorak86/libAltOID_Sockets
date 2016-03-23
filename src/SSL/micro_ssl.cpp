@@ -42,7 +42,7 @@ bool Micro_SSL::isInitialized()
 
 bool Micro_SSL::setCA(const std::__cxx11::string &file)
 {
-    return SSL_CTX_use_certificate_chain_file(sslContext, file.c_str()) == 1;
+    return SSL_CTX_load_verify_locations(sslContext, file.c_str(),NULL) == 1;
 }
 
 bool Micro_SSL::setCRT(const std::__cxx11::string &file)
