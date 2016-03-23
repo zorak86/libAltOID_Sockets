@@ -2,6 +2,8 @@
 
 Stream_Pipe::Stream_Pipe()
 {
+    wayRecvBytes = 0 ;
+    waySentBytes = 0;
     sentBytes = 0;
     recvBytes = 0;
 
@@ -94,6 +96,10 @@ bool Stream_Pipe::StartPeerBlocking(unsigned char i)
     {
         if (!next->writeBlock(block,bytesReceived))
         {
+            // Update counters.
+            if (i==0) waySentBytes+= bytesReceived;
+            else wayRecvBytes += bytesReceived;
+
             socket_peers[nextpeer]->shutdownSocket();
             finishingPeer = nextpeer;
             return true;
@@ -164,4 +170,14 @@ bool Stream_Pipe::getAutoDeleteSocketsOnExit() const
 void Stream_Pipe::setAutoDeleteSocketsOnExit(bool value)
 {
     autoDeleteSocketsOnExit = value;
+}
+
+uint64_t Stream_Pipe::getWayRecvBytes() const
+{
+    return wayRecvBytes;
+}
+
+uint64_t Stream_Pipe::getWaySentBytes() const
+{
+    return waySentBytes;
 }

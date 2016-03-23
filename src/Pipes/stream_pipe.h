@@ -92,10 +92,13 @@ public:
      */
     void setAutoDeleteSocketsOnExit(bool value);
 
+    uint64_t getWayRecvBytes() const;
+    uint64_t getWaySentBytes() const;
+
 private:
     Stream_Socket * socket_peers[2];
 
-    std::atomic<uint64_t> sentBytes,recvBytes;
+    std::atomic<uint64_t> sentBytes,recvBytes, wayRecvBytes, waySentBytes;
 
     std::atomic<int> finishingPeer;
     std::atomic<unsigned int> blockSize;
