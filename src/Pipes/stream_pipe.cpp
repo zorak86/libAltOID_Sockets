@@ -97,7 +97,7 @@ bool Stream_Pipe::StartPeerBlocking(unsigned char i)
         if (!next->writeBlock(block,bytesReceived))
         {
             // Update counters.
-            if (i==0) waySentBytes+= bytesReceived;
+            if (i!=0) waySentBytes+= bytesReceived;
             else wayRecvBytes += bytesReceived;
 
             socket_peers[nextpeer]->shutdownSocket();
