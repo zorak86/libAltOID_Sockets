@@ -85,6 +85,10 @@ public:
      */
     bool setSSLPrivateKeyFile(const char * _key_file);
 
+    std::string getCipherName();
+    cipherBits getCipherBits();
+    std::string getCipherVersion();
+
     void setServer(bool value);
 
     /**
