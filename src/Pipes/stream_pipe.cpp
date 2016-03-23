@@ -100,7 +100,11 @@ bool Stream_Pipe::StartPeerBlocking(unsigned char i)
             if (i==0) waySentBytes+= bytesReceived;
             else wayRecvBytes += bytesReceived;
 
-            socket_peers[nextpeer]->shutdownSocket();
+            if (shutdownRemotePeerOnFinish)
+            {
+                socket_peers[nextpeer]->shutdownSocket();
+            }
+
             finishingPeer = nextpeer;
             return true;
         }
