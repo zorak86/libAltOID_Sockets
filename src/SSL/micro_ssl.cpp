@@ -182,7 +182,24 @@ std::__cxx11::string Micro_SSL::getCipherVersion()
 
 bool Micro_SSL::validateConnection()
 {
-    return (SSL_get_verify_result(sslHandle) == X509_V_OK);
+    X509 *cert;
+    bool bValid  = false;
+    cert = SSL_get_peer_certificate(ssl);
+    if ( cert != NULL )
+    {
+        long res = SSL_get_verify_result(sslHandle);
+        if (res == X509_V_OK)
+        {
+            bValid = true;
+        }
+        else
+        {
+            errors.push_back("TLS/SSL Certificate Error: " + std::to_string(res));
+        }
+        X509_free(cert);
+    }
+
+    return bValid;
 }
 
 void Micro_SSL::parseErrors()
