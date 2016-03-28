@@ -9,10 +9,6 @@
 
 #include "micro_ssl.h"
 
-enum SSL_MODE {
-    SSL_MODE_TLS_12
-};
-
 /**
  * TCP Socket Class
  */
