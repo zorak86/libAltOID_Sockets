@@ -145,7 +145,7 @@ int Socket::partialWrite(void *data, uint32_t datalen)
     if (!datalen) return 0;
     if (!useWrite)
     {
-        ssize_t sendLen = send((*microSocket).socket, (char *) data, datalen, 0);
+        ssize_t sendLen = send((*microSocket).socket, (char *) data, datalen, MSG_NOSIGNAL);
         return sendLen;
     }
     else
