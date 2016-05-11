@@ -106,6 +106,7 @@ bool Stream_Pipe::StartPeerBlocking(unsigned char i)
             }
 
             finishingPeer = nextpeer;
+            delete [] block;
             return true;
         }
 
@@ -120,6 +121,7 @@ bool Stream_Pipe::StartPeerBlocking(unsigned char i)
     }
 
     finishingPeer = i;
+    delete [] block;
     return true;
 }
 
