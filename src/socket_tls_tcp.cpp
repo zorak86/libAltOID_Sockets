@@ -74,6 +74,7 @@ bool Socket_TLS_TCP::PostAcceptSubInitialization()
     if (ssl->isInitialized()) return false; // already connected (don't connect again)
 
     isServer = true;
+
     if (!InitSSLContext())
     {
         sslErrors = ssl->getErrorsAndClear();
@@ -82,7 +83,7 @@ bool Socket_TLS_TCP::PostAcceptSubInitialization()
     }
 
     // ssl empty, create a new one.
-    ssl->InitHandle();
+    ssl->InitHandle( ca_file.size()>0 );
 
     if (!ssl->SetFD(getSocket()))
     {

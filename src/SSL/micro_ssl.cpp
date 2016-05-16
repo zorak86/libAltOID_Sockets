@@ -55,9 +55,12 @@ bool Micro_SSL::setKEY(const std::__cxx11::string &file)
     return SSL_CTX_use_PrivateKey_file(sslContext, file.c_str(), SSL_FILETYPE_PEM) == 1;
 }
 
-void Micro_SSL::InitHandle()
+void Micro_SSL::InitHandle(bool validatePeer)
 {
     sslHandle = SSL_new(sslContext);
+
+    if (validatePeer)
+        SSL_set_verify(sslHandle, SSL_VERIFY_PEER, 0);
 }
 
 bool Micro_SSL::SetFD(int sock)

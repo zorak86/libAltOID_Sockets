@@ -19,7 +19,7 @@ public:
     Micro_SSL();
     ~Micro_SSL();
 
-    void InitHandle();
+    void InitHandle(bool validatePeer = false);
     bool InitContext(bool serverMode = false);
     bool isInitialized();
 
