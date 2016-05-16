@@ -118,7 +118,7 @@ private:
     std::list<std::string> sslErrors;
 
     SSL_MODE sslMode;
-    bool server;
+    bool isServer;
 };
 
 #endif // SOCKET_TCP_H

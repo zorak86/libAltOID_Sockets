@@ -12,7 +12,7 @@ using namespace std;
 
 Socket_TLS_TCP::Socket_TLS_TCP()
 {
-    server = false;
+    isServer = false;
     // ssl empty, create a new one.
     ssl.reset(new Micro_SSL);   
 }
@@ -34,7 +34,7 @@ bool Socket_TLS_TCP::PostConnectSubInitialization()
 {
     if (ssl->isInitialized()) return false; // already connected (don't connect again)
 
-    server = false;
+    isServer = false;
 
     if (!InitSSLContext())
     {
@@ -73,7 +73,7 @@ bool Socket_TLS_TCP::PostAcceptSubInitialization()
 {
     if (ssl->isInitialized()) return false; // already connected (don't connect again)
 
-    server = true;
+    isServer = true;
     if (!InitSSLContext())
     {
         sslErrors = ssl->getErrorsAndClear();
@@ -104,7 +104,7 @@ bool Socket_TLS_TCP::PostAcceptSubInitialization()
 bool Socket_TLS_TCP::InitSSLContext()
 {
     // create new SSL Context.
-    if (!ssl->InitContext(server)) return false;
+    if (!ssl->InitContext(isServer)) return false;
 
     if (!ca_file.empty() && !ssl->setCA(ca_file))
     {
@@ -133,7 +133,7 @@ std::list<std::string> Socket_TLS_TCP::getSslErrorsAndClear()
 
 void Socket_TLS_TCP::setServer(bool value)
 {
-    server = value;
+    isServer = value;
 }
 
 void Socket_TLS_TCP::setTLSContextmode(const SSL_MODE &value)
@@ -143,18 +143,21 @@ void Socket_TLS_TCP::setTLSContextmode(const SSL_MODE &value)
 
 bool Socket_TLS_TCP::setSSLCertificateChainFile(const char *_ca_file)
 {
+    if (access(_ca_file,R_OK)) return false;
     ca_file = _ca_file;
     return true;
 }
 
 bool Socket_TLS_TCP::setSSLLocalCertificateFile(const char *_crt_file)
 {
+    if (access(_crt_file,R_OK)) return false;
     crt_file = _crt_file;
     return true;
 }
 
 bool Socket_TLS_TCP::setSSLPrivateKeyFile(const char *_key_file)
 {
+    if (access(_key_file,R_OK)) return false;
     key_file = _key_file;
     return true;
 }
@@ -180,7 +183,7 @@ Stream_Socket * Socket_TLS_TCP::acceptConnection()
     if (!mainSock) return NULL;
     Socket_TLS_TCP * tlsSock = new Socket_TLS_TCP; // Convert to this thing...
 
-    server = true;
+    isServer = true;
 
     // Set current retrieved socket.
     tlsSock->setSocket(mainSock->getSocket());
@@ -198,7 +201,7 @@ Stream_Socket * Socket_TLS_TCP::acceptConnection()
     if (!key_file.empty()) tlsSock->setSSLPrivateKeyFile( key_file.c_str() );
 
     tlsSock->setTLSContextmode(sslMode);
-    tlsSock->setServer(server);
+    tlsSock->setServer(isServer);
 
     return tlsSock;
 }
