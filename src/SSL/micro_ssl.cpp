@@ -64,7 +64,7 @@ void Micro_SSL::InitHandle(bool validatePeer)
     sslHandle = SSL_new(sslContext);
 
     if (validatePeer)
-        SSL_set_verify(sslHandle, SSL_VERIFY_PEER, 0);
+        SSL_set_verify(sslHandle, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT, 0);
 }
 
 bool Micro_SSL::SetFD(int sock)
