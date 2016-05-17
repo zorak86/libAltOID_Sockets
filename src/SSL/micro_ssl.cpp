@@ -46,7 +46,17 @@ bool Micro_SSL::isInitialized()
 
 bool Micro_SSL::setCA(const std::string &file)
 {
-    return SSL_CTX_load_verify_locations(sslContext, file.c_str(),NULL) == 1;
+    if (SSL_CTX_load_verify_locations(sslContext, file.c_str(),NULL) == 1)
+    {
+        list = SSL_load_client_CA_file( file.c_str() );
+        if( list != NULL )
+        {
+            SSL_CTX_set_client_CA_list( sslContext, list );
+            // It takes ownership. (list now belongs to sslContext)
+        }
+        return true;
+    }
+    return false;
 }
 
 bool Micro_SSL::setCRT(const std::string &file)
@@ -64,7 +74,9 @@ void Micro_SSL::InitHandle(bool validatePeer)
     sslHandle = SSL_new(sslContext);
 
     if (validatePeer)
+    {
         SSL_set_verify(sslHandle, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT, 0);
+    }
 }
 
 bool Micro_SSL::SetFD(int sock)

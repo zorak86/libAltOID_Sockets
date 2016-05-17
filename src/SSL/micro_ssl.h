@@ -47,6 +47,8 @@ private:
 
     std::list<std::string> errors;
 
+    STACK_OF(X509_NAME) *list;
+
     SSL *sslHandle;
     SSL_CTX *sslContext;
 };
