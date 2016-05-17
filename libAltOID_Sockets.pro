@@ -55,7 +55,7 @@ INCLUDEPATH += src/SSL
 # C++ standard.
 QMAKE_CXX += -Wno-write-strings -Wno-unused-parameter -Wno-unused-function -O3 -std=c++11 -Wunused -Wno-unused-result
 # LIB DEFS:
-win32:LIBS += -LC:\Qt\Tools\mingw492_32\opt\lib -LC:\libAltOIDS_ROOT\lib -lAltOID_Mutex1 -lssl
+win32:LIBS += -LC:\Qt\Tools\mingw492_32\opt\lib -LC:\libAltOIDS_ROOT\lib -lAltOID_Mutex1 -lssl -lcrypto
 win32:LIBS += -lws2_32
 TARGET = AltOID_Sockets
 TEMPLATE = lib

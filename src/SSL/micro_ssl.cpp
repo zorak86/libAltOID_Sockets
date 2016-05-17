@@ -1,6 +1,10 @@
 #include "micro_ssl.h"
 #include <unistd.h>
 
+#ifdef WIN32
+#include <openssl/safestack.h>
+#endif
+
 Micro_SSL::Micro_SSL()
 {
     sslHandle = nullptr;
@@ -40,17 +44,17 @@ bool Micro_SSL::isInitialized()
     return sslHandle!=nullptr;
 }
 
-bool Micro_SSL::setCA(const std::__cxx11::string &file)
+bool Micro_SSL::setCA(const std::string &file)
 {
     return SSL_CTX_load_verify_locations(sslContext, file.c_str(),NULL) == 1;
 }
 
-bool Micro_SSL::setCRT(const std::__cxx11::string &file)
+bool Micro_SSL::setCRT(const std::string &file)
 {
     return SSL_CTX_use_certificate_file(sslContext, file.c_str(), SSL_FILETYPE_PEM) == 1;
 }
 
-bool Micro_SSL::setKEY(const std::__cxx11::string &file)
+bool Micro_SSL::setKEY(const std::string &file)
 {
     return SSL_CTX_use_PrivateKey_file(sslContext, file.c_str(), SSL_FILETYPE_PEM) == 1;
 }
@@ -159,14 +163,14 @@ size_t Micro_SSL::PartialWrite(void *buffer, size_t len)
     }
 }
 
-std::list<std::__cxx11::string> Micro_SSL::getErrorsAndClear()
+std::list<std::string> Micro_SSL::getErrorsAndClear()
 {
     std::list<std::string> r = errors;
     errors.clear();
     return r;
 }
 
-std::__cxx11::string Micro_SSL::getCipherName()
+std::string Micro_SSL::getCipherName()
 {
     return SSL_get_cipher_name(sslHandle);
 }
@@ -178,7 +182,7 @@ cipherBits Micro_SSL::getCipherBits()
     return cb;
 }
 
-std::__cxx11::string Micro_SSL::getCipherVersion()
+std::string Micro_SSL::getCipherVersion()
 {
     return SSL_get_cipher_version(sslHandle);
 }
