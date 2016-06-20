@@ -169,7 +169,7 @@ public:
      * Use for terminate the connection. both sides will start to fail to receive/send
      * You should also use Close too. (or reuse the socket?)
      */
-    int shutdownSocket();
+    virtual int shutdownSocket();
     /**
      * Read a data block from the socket
      * Receive the data block in only one command (without chunks).
