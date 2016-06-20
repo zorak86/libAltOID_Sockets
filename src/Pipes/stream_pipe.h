@@ -24,13 +24,13 @@ public:
      * @param autoDelete true (default) if going to delete the whole pipe when finish.
      * @return true if initialized, false if not.
      */
-    bool StartThreaded(bool _autoDeleteStreamPipeOnExit = true);
+    bool StartThreaded(bool _autoDeleteStreamPipeOnExit = true, bool detach = true);
 
     /**
-     * @brief JoinThread will block-wait until thread finishes
+     * @brief WaitForThread will block-wait until thread finishes
      * @return -1 failed, 0: socket 0 closed the connection, 1: socket 1 closed the connection.
      */
-    int JoinThread();
+    int WaitForThread();
 
     /**
      * @brief StartBlocking, begin the communication between peers blocking until it ends.

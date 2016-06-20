@@ -40,7 +40,7 @@ void * pipeThread(void * _stp)
     return NULL;
 }
 
-bool Stream_Pipe::StartThreaded(bool _autoDeleteStreamPipeOnExit)
+bool Stream_Pipe::StartThreaded(bool _autoDeleteStreamPipeOnExit, bool detach)
 {
     if (!socket_peers[0] || !socket_peers[1]) return false;
 
@@ -48,13 +48,13 @@ bool Stream_Pipe::StartThreaded(bool _autoDeleteStreamPipeOnExit)
 
     pthread_create(&pipeThreadP, NULL, pipeThread, this);
 
-    if (autoDeleteStreamPipeOnExit)
+    if (autoDeleteStreamPipeOnExit || detach)
         pthread_detach(pipeThreadP);
 
     return true;
 }
 
-int Stream_Pipe::JoinThread()
+int Stream_Pipe::WaitForThread()
 {
     pthread_join(pipeThreadP,NULL);
     return finishingPeer;
