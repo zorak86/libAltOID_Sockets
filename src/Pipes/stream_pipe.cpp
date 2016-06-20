@@ -2,7 +2,7 @@
 
 Stream_Pipe::Stream_Pipe()
 {
-    wayRecvBytes = 0 ;
+    wayRecvBytes = 0;
     waySentBytes = 0;
     sentBytes = 0;
     recvBytes = 0;
@@ -13,9 +13,10 @@ Stream_Pipe::Stream_Pipe()
     finishingPeer = -1;
     autoDeleteSocketsOnExit = false;
 
-    setBlockSize();
-    setAutoDelete();
-    setToShutdownRemotePeer();
+    setBlockSize(8192);
+    setAutoDeleteStreamPipeOnThreadExit(true);
+    setToShutdownRemotePeer(true);
+    setToCloseRemotePeer(true);
 }
 
 Stream_Pipe::~Stream_Pipe()
@@ -31,7 +32,7 @@ void * pipeThread(void * _stp)
 {
     Stream_Pipe * stp = (Stream_Pipe *)_stp;
     stp->StartBlocking();
-    if (stp->getAutoDelete())
+    if (stp->getAutoDeleteStreamPipeOnThreadExit())
     {
         delete stp;
     }
@@ -39,17 +40,24 @@ void * pipeThread(void * _stp)
     return NULL;
 }
 
-bool Stream_Pipe::StartThreaded(bool _autoDelete)
+bool Stream_Pipe::StartThreaded(bool _autoDeleteStreamPipeOnExit)
 {
     if (!socket_peers[0] || !socket_peers[1]) return false;
 
-    autoDelete = _autoDelete;
+    autoDeleteStreamPipeOnExit = _autoDeleteStreamPipeOnExit;
 
-    pthread_t pipeThreadP;
     pthread_create(&pipeThreadP, NULL, pipeThread, this);
-    pthread_detach(pipeThreadP);
+
+    if (autoDeleteStreamPipeOnExit)
+        pthread_detach(pipeThreadP);
 
     return true;
+}
+
+int Stream_Pipe::JoinThread()
+{
+    pthread_join(pipeThreadP,NULL);
+    return finishingPeer;
 }
 
 void * remotePeerThread(void * _stp)
@@ -70,7 +78,7 @@ int Stream_Pipe::StartBlocking()
     pthread_join(remotePeerThreadP,NULL);
 
     // All connections terminated.
-    if (shutdownRemotePeerOnFinish)
+    if (closeRemotePeerOnFinish)
     {
         // close them also.
         socket_peers[1]->closeSocket();
@@ -138,14 +146,19 @@ Stream_Socket *Stream_Pipe::GetPeer(unsigned char i)
     return socket_peers[i];
 }
 
-void Stream_Pipe::setAutoDelete(bool value)
+void Stream_Pipe::setAutoDeleteStreamPipeOnThreadExit(bool value)
 {
-    autoDelete = value;
+    autoDeleteStreamPipeOnExit = value;
 }
 
 void Stream_Pipe::setToShutdownRemotePeer(bool value)
 {
     shutdownRemotePeerOnFinish = value;
+}
+
+void Stream_Pipe::setToCloseRemotePeer(bool value)
+{
+    closeRemotePeerOnFinish = value;
 }
 
 void Stream_Pipe::setBlockSize(unsigned int value)
@@ -163,9 +176,9 @@ uint64_t Stream_Pipe::getRecvBytes() const
     return recvBytes;
 }
 
-bool Stream_Pipe::getAutoDelete() const
+bool Stream_Pipe::getAutoDeleteStreamPipeOnThreadExit() const
 {
-    return autoDelete;
+    return autoDeleteStreamPipeOnExit;
 }
 
 bool Stream_Pipe::getAutoDeleteSocketsOnExit() const

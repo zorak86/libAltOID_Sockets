@@ -24,7 +24,14 @@ public:
      * @param autoDelete true (default) if going to delete the whole pipe when finish.
      * @return true if initialized, false if not.
      */
-    bool StartThreaded(bool _autoDelete = true);
+    bool StartThreaded(bool _autoDeleteStreamPipeOnExit = true);
+
+    /**
+     * @brief JoinThread will block-wait until thread finishes
+     * @return -1 failed, 0: socket 0 closed the connection, 1: socket 1 closed the connection.
+     */
+    int JoinThread();
+
     /**
      * @brief StartBlocking, begin the communication between peers blocking until it ends.
      * @return -1 failed, 0: socket 0 closed the connection, 1: socket 1 closed the connection.
@@ -50,15 +57,20 @@ public:
      */
     Stream_Socket * GetPeer(unsigned char i);
     /**
-     * @brief setAutoDelete Auto Delete the pipe object when finish his job
+     * @brief setAutoDelete Auto Delete the pipe object when finish threaded job.
      * @param value true for autodelete (default), false for not.
      */
-    void setAutoDelete(bool value = true);
+    void setAutoDeleteStreamPipeOnThreadExit(bool value = true);
     /**
-     * @brief shutdownRemotePeer set to shutdown remote socket peer on finish.
+     * @brief shutdownRemotePeer set to shutdown both sockets peer on finish.
      * @param value true for close the remote peer (default), false for not.
      */
     void setToShutdownRemotePeer(bool value = true);
+    /**
+     * @brief closeRemotePeer set to close both sockets peer on finish.
+     * @param value true for close the remote peer (default), false for not.
+     */
+    void setToCloseRemotePeer(bool value = true);
     /**
      * @brief setBlockSize Set Transfer Block Chunk Size
      * @param value Chunk size, default 8192
@@ -74,13 +86,11 @@ public:
      * @return bytes transmitted.
      */
     uint64_t getRecvBytes() const;
-
-
     /**
      * @brief getAutoDelete Get if this class autodeletes when pipe is over.
      * @return true if autodelete is on.
      */
-    bool getAutoDelete() const;
+    bool getAutoDeleteStreamPipeOnThreadExit() const;
     /**
      * @brief getAutoDeleteSocketsOnExit Get if pipe endpoint sockets are going to be deleted when this class is destroyed.
      * @return true if it's going to be deleted.
@@ -104,8 +114,13 @@ private:
     std::atomic<unsigned int> blockSize;
 
     std::atomic<bool> shutdownRemotePeerOnFinish;
-    bool autoDelete;
+    std::atomic<bool> closeRemotePeerOnFinish;
+
+    bool autoDeleteStreamPipeOnExit;
     bool autoDeleteSocketsOnExit;
+
+
+    pthread_t pipeThreadP;
 };
 
 #endif // STREAM_PIPE_H
