@@ -10,30 +10,31 @@ SOURCES += \
     src/SOSProtocol404/SOSProtocol404Socket.cpp \
     src/datagram_socket.cpp \
     src/socket_tcp.cpp \
-    src/socket_tls_tcp.cpp \
     src/socket_udp.cpp \
     src/socket.cpp \
     src/stream_socket.cpp \
     src/ThreadingControl/threaded_client_control.cpp \
     src/ThreadingControl/threaded_stream_acceptor.cpp \
-    src/Pipes/stream_pipe.cpp \
-    src/SSL/micro_ssl.cpp
+    src/Pipes/stream_pipe.cpp
 
 HEADERS += \
     src/SOSProtocol404/SOSProtocol404Socket.h \
     src/datagram_socket.h \
     src/socket_tcp.h \
-    src/socket_tls_tcp.h \
     src/socket_udp.h \
     src/socket.h \
     src/stream_socket.h \
     src/ThreadingControl/threaded_client_control.h \
     src/ThreadingControl/threaded_stream_acceptor.h \
-    src/Pipes/stream_pipe.h \
-    src/SSL/micro_ssl.h
+    src/Pipes/stream_pipe.h
 
 isEmpty(PREFIX) {
     PREFIX = /usr/local
+}
+
+!disable_ssl {
+    SOURCES += src/socket_tls_tcp.cpp src/SSL/micro_ssl.cpp
+    HEADERS += src/socket_tls_tcp.h src/SSL/micro_ssl.h
 }
 
 !win32 {
@@ -48,18 +49,29 @@ win32 {
 # includes dir
 QMAKE_INCDIR += $$PREFIX/include
 QMAKE_INCDIR += src
-QMAKE_INCDIR += src/SSL
+!disable_ssl {
+    QMAKE_INCDIR += src/SSL
+}
 INCLUDEPATH += $$PREFIX/include
 INCLUDEPATH += src
-INCLUDEPATH += src/SSL
+!disable_ssl {
+    INCLUDEPATH += src/SSL
+}
 # C++ standard.
 QMAKE_CXX += -Wno-write-strings -Wno-unused-parameter -Wno-unused-function -O3 -std=c++11 -Wunused -Wno-unused-result
+
 # LIB DEFS:
+!disable_ssl {
 win32:LIBS += -LC:\Qt\Tools\mingw492_32\opt\lib -LC:\libAltOIDS_ROOT\lib -lAltOID_Mutex1 -lssl -lcrypto
 win32:LIBS += -lws2_32
+} else {
+win32:LIBS += -LC:\Qt\Tools\mingw492_32\opt\lib -LC:\libAltOIDS_ROOT\lib -lAltOID_Mutex1
+win32:LIBS += -lws2_32
+}
+
 TARGET = AltOID_Sockets
 TEMPLATE = lib
-VERSION      = 2.0.1
+VERSION      = 2.0.2
 # INSTALLATION:
 target.path = $$PREFIX/lib
 header_files.files = $$HEADERS

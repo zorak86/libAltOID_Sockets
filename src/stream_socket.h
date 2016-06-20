@@ -2,12 +2,19 @@
 #define ALT_SOCKETS_STREAM_SOCKET_H_
 
 #include "socket.h"
+#include <utility>
 
 class Stream_Socket : public Socket
 {
 public:
 	Stream_Socket();
 	virtual ~Stream_Socket();
+
+    /**
+     * @brief GetSocketPair Create a Pair of interconnected sockets
+     * @return pair of interconnected Stream_Sockets.
+    */
+    std::pair<Stream_Socket,Stream_Socket> GetSocketPair();
 
 	// non implemented methods here:
     virtual bool isConnected();

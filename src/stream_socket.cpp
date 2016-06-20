@@ -25,6 +25,26 @@ Stream_Socket::~Stream_Socket()
 {
 }
 
+std::pair<Stream_Socket,Stream_Socket> Stream_Socket::GetSocketPair()
+{
+    int sockets[2];
+    std::pair<Stream_Socket,Stream_Socket> p;
+#ifndef WIN32
+    if (socketpair(AF_UNIX, SOCK_STREAM, 0, sockets) < 0)
+    {
+        // ERROR:...
+    }
+    else
+    {
+        p.first.setSocket(sockets[0]);
+        p.second.setSocket(sockets[1]);
+    }
+#else
+    // TODO: NOT DEFINED FOR WIN32 YET.
+#endif
+    return p;
+}
+
 bool Stream_Socket::writeBlock(const char *data)
 {
     return writeBlock(data,strlen(data));

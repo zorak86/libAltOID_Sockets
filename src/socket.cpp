@@ -29,7 +29,13 @@ Socket::Socket()
 	lastError = "";
     // Create the socket...
     microSocket.reset(new MicroSocket);
-	memset(remotePair, 0, sizeof(remotePair));
+    memset(remotePair, 0, sizeof(remotePair));
+}
+
+Socket::Socket(int sockfd)
+{
+    Socket();
+    setSocket(sockfd);
 }
 
 Socket::~Socket()

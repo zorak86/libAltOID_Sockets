@@ -23,7 +23,6 @@ struct MicroSocket {
     {
         return socket!=-1;
     }
-
     ~MicroSocket()
     {
         if (socket!=-1)
@@ -49,6 +48,7 @@ public:
 	 * note: does not initialize the socket
 	 */
     Socket();
+    Socket(int sockfd);
     virtual ~Socket();
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -224,7 +224,5 @@ protected:
     static Mutex_Instance sockMutex;
     static bool socketInitialized,badSocket;
 };
-
-
 
 #endif // SOCKET_H

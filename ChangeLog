@@ -1,3 +1,6 @@
+Version 2.0.2
+- Optional TLS Support (CONFIG+=disable_ssl)
+- Socket Pair generation support for stream sockets.
 Version 2.0.0
 - TLS Support
 - Shared pointers support
