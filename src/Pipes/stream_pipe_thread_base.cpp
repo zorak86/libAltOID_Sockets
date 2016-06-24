@@ -43,7 +43,7 @@ void Stream_Pipe_Thread_Base::setBlockSize(unsigned int value)
     block_rev = new char[blockSize];
 }
 
-bool Stream_Pipe_Thread_Base::writeBlock(const void *data, uint32_t datalen, bool fwd)
+bool Stream_Pipe_Thread_Base::writeBlockL(const void *data, uint32_t datalen, bool fwd)
 {
     Locker_Mutex lmt(fwd?&mt_fwd:&mt_rev);
     Stream_Socket *dstX=fwd?dst:src;
@@ -52,20 +52,19 @@ bool Stream_Pipe_Thread_Base::writeBlock(const void *data, uint32_t datalen, boo
 
 int Stream_Pipe_Thread_Base::simpleProcessPipe(bool fwd)
 {
-    Stream_Socket *src1=fwd?src:dst;
     char * curBlock = fwd?block_fwd:block_rev;
 
     int bytesReceived;
-    if ((bytesReceived=src1->partialRead(curBlock,blockSize))>0)
+    if ((bytesReceived=partialReadL(curBlock,blockSize,fwd))>0)
     {
-        if (!writeBlock(curBlock,bytesReceived,fwd)) return -2;
+        if (!writeBlockL(curBlock,bytesReceived,fwd)) return -2;
         // Update Counters:
         return bytesReceived;
     }
     return -1;
 }
 
-int Stream_Pipe_Thread_Base::partialRead(void *data, uint32_t datalen, bool fwd)
+int Stream_Pipe_Thread_Base::partialReadL(void *data, uint32_t datalen, bool fwd)
 {
     return (fwd?src:dst)->partialRead(data,datalen);
 }

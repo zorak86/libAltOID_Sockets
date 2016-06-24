@@ -43,7 +43,7 @@ public:
      * @param datalen data lenght to be written
      * @return true if success
      */
-    bool writeBlock(const void *data, uint32_t datalen, bool fwd = true);
+    bool writeBlockL(const void *data, uint32_t datalen, bool fwd = true);
 
 protected:
     Stream_Socket * src;
@@ -59,7 +59,7 @@ private:
      */
     int simpleProcessPipe(bool fwd);
 
-    int partialRead(void *data, uint32_t datalen, bool fwd = true);
+    int partialReadL(void *data, uint32_t datalen, bool fwd = true);
 
     Stream_Socket * dst;
     char * block_rev;
