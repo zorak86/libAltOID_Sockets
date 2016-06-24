@@ -23,7 +23,7 @@ Stream_Pipe::Stream_Pipe()
 
     finishingPeer = -1;
     autoDeleteSocketsOnExit = false;
-    autoDeleteCustomPipeOnExit = false;
+    autoDeleteCustomPipeOnClose = false;
 
     setAutoDeleteStreamPipeOnThreadExit(true);
     setToShutdownRemotePeer(true);
@@ -36,10 +36,6 @@ Stream_Pipe::~Stream_Pipe()
     {
         if (socket_peers[0]) delete socket_peers[0];
         if (socket_peers[1]) delete socket_peers[1];
-    }
-    if ( autoDeleteCustomPipeOnExit )
-    {
-        delete customPipeProcessor;
     }
 }
 
@@ -75,10 +71,19 @@ int Stream_Pipe::StartBlocking()
 {
     if (!socket_peers[0] || !socket_peers[1]) return -1;
 
-    pthread_t remotePeerThreadP;
-    pthread_create(&remotePeerThreadP, NULL, remotePeerThread, this);
-    StartPeerBlocking(0);
-    pthread_join(remotePeerThreadP,NULL);
+    if (!customPipeProcessor)
+    {
+        customPipeProcessor = new Stream_Pipe_Thread_Base(socket_peers[0],socket_peers[1]);
+        autoDeleteCustomPipeOnClose = true;
+    }
+
+    if (customPipeProcessor->startPipeSync())
+    {
+        pthread_t remotePeerThreadP;
+        pthread_create(&remotePeerThreadP, NULL, remotePeerThread, this);
+        StartPeerBlocking(0);
+        pthread_join(remotePeerThreadP,NULL);
+    }
 
     // All connections terminated.
     if (closeRemotePeerOnFinish)
@@ -86,6 +91,12 @@ int Stream_Pipe::StartBlocking()
         // close them also.
         socket_peers[1]->closeSocket();
         socket_peers[0]->closeSocket();
+    }
+
+    if ( autoDeleteCustomPipeOnClose )
+    {
+        delete customPipeProcessor;
+        customPipeProcessor = NULL;
     }
 
     return finishingPeer;
@@ -97,12 +108,6 @@ bool Stream_Pipe::StartPeerBlocking(unsigned char cur)
 
     unsigned char next = cur==0?1:0;
     std::atomic<uint64_t> * bytesCounter = cur==0?&sentBytes:&recvBytes;
-
-    if (!customPipeProcessor)
-    {
-        customPipeProcessor = new Stream_Pipe_Thread_Base(socket_peers[cur],socket_peers[next]);
-        autoDeleteCustomPipeOnExit = true;
-    }
 
     int dataRecv=0;
     while ( dataRecv >= 0 )

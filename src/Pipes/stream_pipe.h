@@ -113,7 +113,7 @@ private:
 
     bool autoDeleteStreamPipeOnExit;
     bool autoDeleteSocketsOnExit;
-    bool autoDeleteCustomPipeOnExit;
+    bool autoDeleteCustomPipeOnClose;
 
     pthread_t pipeThreadP;
 };

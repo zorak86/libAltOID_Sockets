@@ -25,6 +25,11 @@ int Stream_Pipe_Thread_Base::processPipeREV()
     return simpleProcessPipe(false);
 }
 
+bool Stream_Pipe_Thread_Base::startPipeSync()
+{
+    return true;
+}
+
 void Stream_Pipe_Thread_Base::setBlockSize(unsigned int value)
 {
     if (block_fwd) delete [] block_fwd;

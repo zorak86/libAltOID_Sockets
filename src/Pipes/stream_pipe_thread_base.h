@@ -27,6 +27,9 @@ public:
      */
     virtual int processPipeREV();
 
+
+    virtual bool startPipeSync();
+
     /**
      * @brief setBlockSize Set Transfer Block Chunk Size
      * @param value Chunk size, default 8192
