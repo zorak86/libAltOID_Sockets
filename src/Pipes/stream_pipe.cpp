@@ -73,9 +73,11 @@ int Stream_Pipe::StartBlocking()
 
     if (!customPipeProcessor)
     {
-        customPipeProcessor = new Stream_Pipe_Thread_Base(socket_peers[0],socket_peers[1]);
+        customPipeProcessor = new Stream_Pipe_Thread_Base();
         autoDeleteCustomPipeOnClose = true;
     }
+
+    customPipeProcessor->setStreamSockets(socket_peers[0],socket_peers[1]);
 
     if (customPipeProcessor->startPipeSync())
     {

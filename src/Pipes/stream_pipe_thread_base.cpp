@@ -1,9 +1,7 @@
 #include "stream_pipe_thread_base.h"
 
-Stream_Pipe_Thread_Base::Stream_Pipe_Thread_Base(Stream_Socket *src, Stream_Socket *dst)
+Stream_Pipe_Thread_Base::Stream_Pipe_Thread_Base()
 {
-    this->src = src;
-    this->dst = dst;
     block_fwd = NULL;
     block_rev = NULL;
     setBlockSize(8192);
@@ -13,6 +11,12 @@ Stream_Pipe_Thread_Base::~Stream_Pipe_Thread_Base()
 {
     delete [] block_fwd;
     delete [] block_rev;
+}
+
+void Stream_Pipe_Thread_Base::setStreamSockets(Stream_Socket *src, Stream_Socket *dst)
+{
+    this->src = src;
+    this->dst = dst;
 }
 
 int Stream_Pipe_Thread_Base::processPipeFWD()

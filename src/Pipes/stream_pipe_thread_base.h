@@ -9,8 +9,10 @@
 class Stream_Pipe_Thread_Base
 {
 public:
-    Stream_Pipe_Thread_Base(Stream_Socket * src, Stream_Socket * dst);
+    Stream_Pipe_Thread_Base();
     virtual ~Stream_Pipe_Thread_Base();
+
+    void setStreamSockets(Stream_Socket * src, Stream_Socket * dst);
 
     /**
      * @brief processPipeFWD reads from SRC and write into DST making the proper transformations
