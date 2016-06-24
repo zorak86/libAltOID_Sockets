@@ -97,30 +97,23 @@ public:
      * @param value true if you want sockets to be deleted on exit.
      */
     void setAutoDeleteSocketsOnExit(bool value);
-
-
     /**
      * @brief setCustomPipeProcessor Set custom pipe processor.
      * @param value pipe processor.
      */
-    void setCustomPipeProcessor(Stream_Pipe_Thread_Base *value);
+    void setCustomPipeProcessor(Stream_Pipe_Thread_Base *value, bool deleteOnExit = false);
 
 private:
-    Stream_Pipe_Thread_Base * customPipeProcessor;
-
+    Stream_Pipe_Thread_Base *customPipeProcessor;
     Stream_Socket * socket_peers[2];
-
     std::atomic<uint64_t> sentBytes,recvBytes;
-
     std::atomic<int> finishingPeer;
-
-
     std::atomic<bool> shutdownRemotePeerOnFinish;
     std::atomic<bool> closeRemotePeerOnFinish;
 
     bool autoDeleteStreamPipeOnExit;
     bool autoDeleteSocketsOnExit;
-
+    bool autoDeleteCustomPipeOnExit;
 
     pthread_t pipeThreadP;
 };

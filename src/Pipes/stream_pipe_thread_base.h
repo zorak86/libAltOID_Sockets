@@ -10,7 +10,7 @@ class Stream_Pipe_Thread_Base
 {
 public:
     Stream_Pipe_Thread_Base(Stream_Socket * src, Stream_Socket * dst);
-    ~Stream_Pipe_Thread_Base();
+    virtual ~Stream_Pipe_Thread_Base();
 
     /**
      * @brief processPipeFWD reads from SRC and write into DST making the proper transformations
@@ -33,10 +33,10 @@ public:
      */
     void setBlockSize(unsigned int value = 8192);
     /**
-     * @brief writeBlockFWD
-     * @param data
-     * @param datalen
-     * @return
+     * @brief writeBlock write a whole data into next socket
+     * @param data data to be written
+     * @param datalen data lenght to be written
+     * @return true if success
      */
     bool writeBlock(const void *data, uint32_t datalen, bool fwd = true);
 
@@ -54,7 +54,7 @@ private:
     Stream_Socket * src;
     Stream_Socket * dst;
 
-    char * block;
+    char * block_fwd, * block_rev;
 
     std::atomic<unsigned int> blockSize;
 

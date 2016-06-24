@@ -23,6 +23,7 @@ Stream_Pipe::Stream_Pipe()
 
     finishingPeer = -1;
     autoDeleteSocketsOnExit = false;
+    autoDeleteCustomPipeOnExit = false;
 
     setAutoDeleteStreamPipeOnThreadExit(true);
     setToShutdownRemotePeer(true);
@@ -35,6 +36,10 @@ Stream_Pipe::~Stream_Pipe()
     {
         if (socket_peers[0]) delete socket_peers[0];
         if (socket_peers[1]) delete socket_peers[1];
+    }
+    if ( autoDeleteCustomPipeOnExit )
+    {
+        delete customPipeProcessor;
     }
 }
 
@@ -94,10 +99,13 @@ bool Stream_Pipe::StartPeerBlocking(unsigned char cur)
     std::atomic<uint64_t> * bytesCounter = cur==0?&sentBytes:&recvBytes;
 
     if (!customPipeProcessor)
+    {
         customPipeProcessor = new Stream_Pipe_Thread_Base(socket_peers[cur],socket_peers[next]);
+        autoDeleteCustomPipeOnExit = true;
+    }
 
     int dataRecv=0;
-    while (dataRecv>=0)
+    while ( dataRecv >= 0 )
     {
         dataRecv = cur==0?customPipeProcessor->processPipeFWD():customPipeProcessor->processPipeREV();
 
@@ -166,7 +174,7 @@ void Stream_Pipe::setAutoDeleteSocketsOnExit(bool value)
 }
 
 
-void Stream_Pipe::setCustomPipeProcessor(Stream_Pipe_Thread_Base *value)
+void Stream_Pipe::setCustomPipeProcessor(Stream_Pipe_Thread_Base *value, bool deleteOnExit)
 {
     customPipeProcessor = value;
 }
