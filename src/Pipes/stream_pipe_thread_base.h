@@ -1,0 +1,64 @@
+#ifndef STREAM_PIPE_THREAD_BASE_H
+#define STREAM_PIPE_THREAD_BASE_H
+
+#include "stream_socket.h"
+#include <alt_mutex/locker_mutex.h>
+#include <atomic>
+
+
+class Stream_Pipe_Thread_Base
+{
+public:
+    Stream_Pipe_Thread_Base(Stream_Socket * src, Stream_Socket * dst);
+    ~Stream_Pipe_Thread_Base();
+
+    /**
+     * @brief processPipeFWD reads from SRC and write into DST making the proper transformations
+     * @param src socket to read from.
+     * @param dst socket to write into.
+     * @return -1 if src terminated the connection, -2 if dst terminated the connection, otherwise, bytes processed.
+     */
+    virtual int processPipeFWD();
+    /**
+     * @brief processPipeREV
+     * @param src socket to read from.
+     * @param dst socket to write into.
+     * @return -1 if src terminated the connection, -2 if dst terminated the connection, otherwise, bytes processed.
+     */
+    virtual int processPipeREV();
+
+    /**
+     * @brief setBlockSize Set Transfer Block Chunk Size
+     * @param value Chunk size, default 8192
+     */
+    void setBlockSize(unsigned int value = 8192);
+    /**
+     * @brief writeBlockFWD
+     * @param data
+     * @param datalen
+     * @return
+     */
+    bool writeBlock(const void *data, uint32_t datalen, bool fwd = true);
+
+private:
+    /**
+     * @brief simpleProcessPipe simple pipe processor (data in, data out as is)
+     * @param src socket to read from.
+     * @param dst socket to read from.
+     * @return -1 if src terminated the connection, -2 if dst terminated the connection, otherwise, bytes processed.
+     */
+    int simpleProcessPipe(bool fwd);
+
+    int partialRead(void *data, uint32_t datalen, bool fwd = true);
+
+    Stream_Socket * src;
+    Stream_Socket * dst;
+
+    char * block;
+
+    std::atomic<unsigned int> blockSize;
+
+    Mutex_Instance mt_fwd, mt_rev;
+};
+
+#endif // STREAM_PIPE_THREAD_BASE_H

@@ -2,6 +2,7 @@
 #define STREAM_PIPE_H
 
 #include "stream_socket.h"
+#include "stream_pipe_thread_base.h"
 #include <stdint.h>
 #include <atomic>
 
@@ -72,11 +73,6 @@ public:
      */
     void setToCloseRemotePeer(bool value = true);
     /**
-     * @brief setBlockSize Set Transfer Block Chunk Size
-     * @param value Chunk size, default 8192
-     */
-    void setBlockSize(unsigned int value = 8192);
-    /**
      * @brief getSentBytes Get bytes transmitted from peer 0 to peer 1.
      * @return bytes transmitted.
      */
@@ -102,16 +98,22 @@ public:
      */
     void setAutoDeleteSocketsOnExit(bool value);
 
-    uint64_t getWayRecvBytes() const;
-    uint64_t getWaySentBytes() const;
+
+    /**
+     * @brief setCustomPipeProcessor Set custom pipe processor.
+     * @param value pipe processor.
+     */
+    void setCustomPipeProcessor(Stream_Pipe_Thread_Base *value);
 
 private:
+    Stream_Pipe_Thread_Base * customPipeProcessor;
+
     Stream_Socket * socket_peers[2];
 
-    std::atomic<uint64_t> sentBytes,recvBytes, wayRecvBytes, waySentBytes;
+    std::atomic<uint64_t> sentBytes,recvBytes;
 
     std::atomic<int> finishingPeer;
-    std::atomic<unsigned int> blockSize;
+
 
     std::atomic<bool> shutdownRemotePeerOnFinish;
     std::atomic<bool> closeRemotePeerOnFinish;

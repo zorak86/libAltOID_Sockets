@@ -1,9 +1,20 @@
 #include "stream_pipe.h"
 
+void * pipeThread(void * _stp)
+{
+    Stream_Pipe * stp = (Stream_Pipe *)_stp;
+    stp->StartBlocking();
+    if (stp->getAutoDeleteStreamPipeOnThreadExit())
+    {
+        delete stp;
+    }
+    pthread_exit(NULL);
+    return NULL;
+}
+
 Stream_Pipe::Stream_Pipe()
 {
-    wayRecvBytes = 0;
-    waySentBytes = 0;
+    customPipeProcessor = NULL;
     sentBytes = 0;
     recvBytes = 0;
 
@@ -13,7 +24,6 @@ Stream_Pipe::Stream_Pipe()
     finishingPeer = -1;
     autoDeleteSocketsOnExit = false;
 
-    setBlockSize(8192);
     setAutoDeleteStreamPipeOnThreadExit(true);
     setToShutdownRemotePeer(true);
     setToCloseRemotePeer(true);
@@ -26,18 +36,6 @@ Stream_Pipe::~Stream_Pipe()
         if (socket_peers[0]) delete socket_peers[0];
         if (socket_peers[1]) delete socket_peers[1];
     }
-}
-
-void * pipeThread(void * _stp)
-{
-    Stream_Pipe * stp = (Stream_Pipe *)_stp;
-    stp->StartBlocking();
-    if (stp->getAutoDeleteStreamPipeOnThreadExit())
-    {
-        delete stp;
-    }
-    pthread_exit(NULL);
-    return NULL;
 }
 
 bool Stream_Pipe::StartThreaded(bool _autoDeleteStreamPipeOnExit, bool detach)
@@ -88,48 +86,29 @@ int Stream_Pipe::StartBlocking()
     return finishingPeer;
 }
 
-bool Stream_Pipe::StartPeerBlocking(unsigned char i)
+bool Stream_Pipe::StartPeerBlocking(unsigned char cur)
 {
-    if (i>1) return false;
+    if (cur>1) return false;
 
-    unsigned char nextpeer = i==0?1:0;
+    unsigned char next = cur==0?1:0;
+    std::atomic<uint64_t> * bytesCounter = cur==0?&sentBytes:&recvBytes;
 
-    Stream_Socket * current = socket_peers[i];
-    Stream_Socket * next = socket_peers[nextpeer];
+    if (!customPipeProcessor)
+        customPipeProcessor = new Stream_Pipe_Thread_Base(socket_peers[cur],socket_peers[next]);
 
-    int bytesReceived;
-    char * block = new char[blockSize];
-
-    while ((bytesReceived=current->partialRead(block,blockSize))>0)
+    int dataRecv=0;
+    while (dataRecv>=0)
     {
-        if (!next->writeBlock(block,bytesReceived))
+        dataRecv = cur==0?customPipeProcessor->processPipeFWD():customPipeProcessor->processPipeREV();
+
+        if (dataRecv>=0) *bytesCounter+=dataRecv;
+        else if (dataRecv==-1 && shutdownRemotePeerOnFinish)
         {
-            // Update counters.
-            if (i==0) waySentBytes+= bytesReceived;
-            else wayRecvBytes += bytesReceived;
-
-            if (shutdownRemotePeerOnFinish)
-            {
-                socket_peers[nextpeer]->shutdownSocket();
-            }
-
-            finishingPeer = nextpeer;
-            delete [] block;
-            return true;
+            socket_peers[next]->shutdownSocket();
+            finishingPeer = cur;
         }
-
-        // Update Counters:
-        if (i==0) sentBytes+= bytesReceived;
-        else recvBytes += bytesReceived;
     }
 
-    if (shutdownRemotePeerOnFinish)
-    {
-        socket_peers[nextpeer]->shutdownSocket();
-    }
-
-    finishingPeer = i;
-    delete [] block;
     return true;
 }
 
@@ -161,11 +140,6 @@ void Stream_Pipe::setToCloseRemotePeer(bool value)
     closeRemotePeerOnFinish = value;
 }
 
-void Stream_Pipe::setBlockSize(unsigned int value)
-{
-    blockSize = value;
-}
-
 uint64_t Stream_Pipe::getSentBytes() const
 {
     return sentBytes;
@@ -191,12 +165,8 @@ void Stream_Pipe::setAutoDeleteSocketsOnExit(bool value)
     autoDeleteSocketsOnExit = value;
 }
 
-uint64_t Stream_Pipe::getWayRecvBytes() const
-{
-    return wayRecvBytes;
-}
 
-uint64_t Stream_Pipe::getWaySentBytes() const
+void Stream_Pipe::setCustomPipeProcessor(Stream_Pipe_Thread_Base *value)
 {
-    return waySentBytes;
+    customPipeProcessor = value;
 }
