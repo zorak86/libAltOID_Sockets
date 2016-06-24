@@ -43,6 +43,11 @@ public:
      */
     bool writeBlock(const void *data, uint32_t datalen, bool fwd = true);
 
+protected:
+    Stream_Socket * src;
+    char * block_fwd;
+    std::atomic<unsigned int> blockSize;
+
 private:
     /**
      * @brief simpleProcessPipe simple pipe processor (data in, data out as is)
@@ -54,12 +59,8 @@ private:
 
     int partialRead(void *data, uint32_t datalen, bool fwd = true);
 
-    Stream_Socket * src;
     Stream_Socket * dst;
-
-    char * block_fwd, * block_rev;
-
-    std::atomic<unsigned int> blockSize;
+    char * block_rev;
 
     Mutex_Instance mt_fwd, mt_rev;
 };
