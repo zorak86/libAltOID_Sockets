@@ -49,6 +49,7 @@ protected:
     Stream_Socket * src;
     char * block_fwd;
     std::atomic<unsigned int> blockSize;
+    int partialReadL(void *data, uint32_t datalen, bool fwd = true);
 
 private:
     /**
@@ -59,7 +60,6 @@ private:
      */
     int simpleProcessPipe(bool fwd);
 
-    int partialReadL(void *data, uint32_t datalen, bool fwd = true);
 
     Stream_Socket * dst;
     char * block_rev;
