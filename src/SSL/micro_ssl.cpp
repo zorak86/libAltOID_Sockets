@@ -15,7 +15,7 @@ Micro_SSL::~Micro_SSL()
 {
     if (sslHandle)
     {
-        SSL_shutdown (sslHandle);
+//        SSL_shutdown (sslHandle);
         SSL_free (sslHandle);
     }
     if (sslContext)
