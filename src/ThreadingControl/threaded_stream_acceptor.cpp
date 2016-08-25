@@ -129,9 +129,9 @@ bool Threaded_Stream_Acceptor::start()
     if (!pthread_create(&acceptorThread, NULL, ControlThread, this))
     {
         initialized = true;
-#ifndef _WIN32
+/*#ifndef _WIN32
         pthread_setname_np(acceptorThread, "STR_ACCPTOR");
-#endif
+#endif*/
         return true;
     }
     else
