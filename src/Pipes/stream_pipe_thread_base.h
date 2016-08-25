@@ -13,7 +13,6 @@ public:
     virtual ~Stream_Pipe_Thread_Base();
 
     void setStreamSockets(Stream_Socket * src, Stream_Socket * dst);
-
     /**
      * @brief processPipeFWD reads from SRC and write into DST making the proper transformations
      * @param src socket to read from.
@@ -29,9 +28,7 @@ public:
      */
     virtual int processPipeREV();
 
-
     virtual bool startPipeSync();
-
     /**
      * @brief setBlockSize Set Transfer Block Chunk Size
      * @param value Chunk size, default 8192

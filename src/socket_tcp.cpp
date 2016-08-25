@@ -26,6 +26,11 @@ Socket_TCP::Socket_TCP()
 {
 }
 
+Socket_TCP::~Socket_TCP()
+{
+
+}
+
 void Socket_TCP::setFlag_TCP_NODELAY()
 {
     if (!isValidSocket()) return;

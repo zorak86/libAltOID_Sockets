@@ -17,6 +17,7 @@ public:
 	 * Class constructor.
 	 */
     Socket_TCP();
+    virtual ~Socket_TCP();
     /**
      * Listen on an specific TCP port and address
      * @param listenOnAddress address to listen on. (use :: for ipv6 or 0.0.0.0 if ipv4)
