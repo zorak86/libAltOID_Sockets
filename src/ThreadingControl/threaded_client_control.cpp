@@ -32,9 +32,9 @@ Threaded_Client_Control::~Threaded_Client_Control()
 void Threaded_Client_Control::Start()
 {
     pthread_create(&clientThread, NULL, ClientThread, this);
-#ifndef _WIN32
+/*#ifndef _WIN32
     pthread_setname_np(clientThread, "ACCPTD_CLI");
-#endif
+#endif*/
 }
 
 void Threaded_Client_Control::StopSocket()
