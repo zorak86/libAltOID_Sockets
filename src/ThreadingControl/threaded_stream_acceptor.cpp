@@ -50,6 +50,7 @@ bool Threaded_Stream_Acceptor::acceptClient()
         // this means that we are not accepting anymore.
         // We should stop here. (clientSocket will be closed because there is no other instance of it)
         clientSocket->shutdownSocket();
+        clientSocket->closeSocket(); // Close the socket too.
         delete clientSocket; // clientSocket not proccesed.
         return false;
     }

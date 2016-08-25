@@ -22,7 +22,11 @@ Threaded_Client_Control::Threaded_Client_Control()
 
 Threaded_Client_Control::~Threaded_Client_Control()
 {
-    if (clientSocket) delete clientSocket;
+    if (clientSocket)
+    {
+        clientSocket->closeSocket(); // close the socket when the thread ends...
+        delete clientSocket;
+    }
 }
 
 void Threaded_Client_Control::Start()
