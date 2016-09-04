@@ -40,7 +40,7 @@ std::pair<Stream_Socket,Stream_Socket> Stream_Socket::GetSocketPair()
         p.second.setSocket(sockets[1]);
     }
 #else
-    // TODO: NOT DEFINED FOR WIN32 YET.
+    // TODO: NOT DEFINED FOR WIN32 YET..
 #endif
     return p;
 }
