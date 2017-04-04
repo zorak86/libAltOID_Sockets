@@ -64,6 +64,11 @@ public:
      */
     bool setReadTimeout(unsigned int _timeout);
     /**
+     * Set Write timeout.
+     * @param _timeout timeout in seconds
+     */
+    bool setWriteTimeout(unsigned int _timeout);
+    /**
      * Set system buffer size.
      * Use to increase the current reception buffer
      * @param buffsize buffer size in bytes.

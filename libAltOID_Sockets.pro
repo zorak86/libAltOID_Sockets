@@ -73,7 +73,7 @@ win32:LIBS += -lws2_32
 
 TARGET = AltOID_Sockets
 TEMPLATE = lib
-VERSION      = 2.1.0
+VERSION      = 2.2.0
 # INSTALLATION:
 target.path = $$PREFIX/lib
 header_files.files = $$HEADERS

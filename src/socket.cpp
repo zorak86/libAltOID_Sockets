@@ -223,7 +223,26 @@ bool Socket::setReadTimeout(unsigned int _timeout)
 	{
 		return false;
 	}
-	return true;
+    return true;
+}
+
+bool Socket::setWriteTimeout(unsigned int _timeout)
+{
+    if (!(*microSocket).IsValidSocket()) return false;
+
+    struct timeval timeout;
+    timeout.tv_sec = _timeout;
+    timeout.tv_usec = 0;
+
+#ifdef _WIN32
+    if ((setsockopt((*microSocket).socket, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout))) == -1)
+#else
+    if ((setsockopt((*microSocket).socket, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout))) == -1)
+#endif
+    {
+        return false;
+    }
+    return true;
 }
 
 bool Socket::isValidSocket() const
