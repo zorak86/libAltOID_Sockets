@@ -60,7 +60,7 @@ bool Threaded_Stream_Acceptor::finalizeThreadElement(Threaded_Client_Control *x)
 {
 	Locker_Mutex_WR lock(&rwl);
     if (std::find(threadList.begin(), threadList.end(), x) == threadList.end()) return false;
-    x->Join();
+//    x->Join(); // don't need to join what is already finalized.
     threadList.remove(x);
     delete x;
 

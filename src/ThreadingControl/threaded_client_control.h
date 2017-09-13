@@ -30,7 +30,7 @@ public:
     /**
      * Wait until the socket thread ends.
      */
-    void Join();
+  //  void Join();
     /**
      * Set parent (stream acceptor object)
      * @param parent parent

@@ -31,7 +31,8 @@ Threaded_Client_Control::~Threaded_Client_Control()
 
 void Threaded_Client_Control::Start()
 {
-    pthread_create(&clientThread, NULL, ClientThread, this);
+    int r = pthread_create(&clientThread, NULL, ClientThread, this);
+    if (!r) pthread_detach(clientThread);
 /*#ifndef _WIN32
     pthread_setname_np(clientThread, "ACCPTD_CLI");
 #endif*/
@@ -39,13 +40,13 @@ void Threaded_Client_Control::Start()
 
 void Threaded_Client_Control::StopSocket()
 {
-    clientSocket->shutdownSocket();
+    if (clientSocket) clientSocket->shutdownSocket();
 }
-
+/*
 void Threaded_Client_Control::Join()
 {
     pthread_join(clientThread,NULL);
-}
+}*/
 
 void Threaded_Client_Control::SetCallbackFunction(bool(*_CallbackFunction)(void *, Stream_Socket *), void *obj)
 {
