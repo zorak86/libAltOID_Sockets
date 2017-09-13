@@ -64,10 +64,10 @@ QMAKE_CXX += -Wno-write-strings -Wno-unused-parameter -Wno-unused-function -O3 -
 
 # LIB DEFS:
 !disable_ssl {
-win32:LIBS += -LC:\Qt\Tools\mingw492_32\opt\lib -LC:\libAltOIDS_ROOT\lib -lAltOID_Mutex1 -lssl -lcrypto
+win32:LIBS += -LC:\Qt\Tools\mingw530_32\opt\lib -LC:\libAltOIDS_ROOT\lib -lAltOID_Mutex1 -lssl -lcrypto
 win32:LIBS += -lws2_32
 } else {
-win32:LIBS += -LC:\Qt\Tools\mingw492_32\opt\lib -LC:\libAltOIDS_ROOT\lib -lAltOID_Mutex1
+win32:LIBS += -LC:\Qt\Tools\mingw530_32\opt\lib -LC:\libAltOIDS_ROOT\lib -lAltOID_Mutex1
 win32:LIBS += -lws2_32
 }
 
