@@ -213,7 +213,7 @@ bool Socket_TCP::internalConnect(int sockfd, const sockaddr *addr, socklen_t add
                 if (getsockopt(sockfd, SOL_SOCKET, SO_ERROR, (void*)(&valopt), &lon) < 0)
 #endif
                 {
-                    lastError = "Error in getsockopt() (??)";
+                    lastError = "Error in getsockopt() (?)";
                     return false;
                 }
                 // Check the value returned...
