@@ -22,25 +22,29 @@ bool Socket::badSocket = false;
 
 Socket::Socket()
 {
+    fConstructor();
+}
+
+Socket::Socket(int sockfd)
+{
+    fConstructor();
+    setSocket(sockfd);
+}
+
+void Socket::fConstructor()
+{
     socketSystemInitialization();
 
-	socketType = UNINITIALIZED_SOCKET;
-	useWrite = false;
-	lastError = "";
+    socketType = UNINITIALIZED_SOCKET;
+    useWrite = false;
+    lastError = "";
     // Create the socket...
     microSocket.reset(new MicroSocket);
     memset(remotePair, 0, sizeof(remotePair));
 }
 
-Socket::Socket(int sockfd)
-{
-    Socket();
-    setSocket(sockfd);
-}
-
 Socket::~Socket()
 {
-
 }
 
 void Socket::setUseWrite()
@@ -196,6 +200,8 @@ void Socket::socketSystemInitialization()
         socketInitialized = true;
     }
 }
+
+
 
 unsigned short Socket::getRemotePort() const
 {

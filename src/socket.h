@@ -197,6 +197,7 @@ public:
 
 private:
     static void socketSystemInitialization();
+    void fConstructor();
 
 protected:
     /**
