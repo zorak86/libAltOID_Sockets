@@ -217,13 +217,13 @@ bool Socket::setReadTimeout(unsigned int _timeout)
 {
     if (!(*microSocket).IsValidSocket()) return false;
 
+#ifdef _WIN32
+    DWORD v = _timeout*1000;
+    if ((setsockopt((*microSocket).socket, SOL_SOCKET, SO_RCVTIMEO, (char *)&v, sizeof(DWORD))) != 0)
+#else
     struct timeval timeout;
     timeout.tv_sec = _timeout;
-	timeout.tv_usec = 0;
-
-#ifdef _WIN32
-    if ((setsockopt((*microSocket).socket, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout))) == -1)
-#else
+    timeout.tv_usec = 0;
     if ((setsockopt((*microSocket).socket, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout))) == -1)
 #endif
 	{
@@ -236,13 +236,13 @@ bool Socket::setWriteTimeout(unsigned int _timeout)
 {
     if (!(*microSocket).IsValidSocket()) return false;
 
+#ifdef _WIN32
+    int v=_timeout*1000;
+    if ((setsockopt((*microSocket).socket, SOL_SOCKET, SO_SNDTIMEO, (char *)&v, sizeof(int))) != 0)
+#else
     struct timeval timeout;
     timeout.tv_sec = _timeout;
     timeout.tv_usec = 0;
-
-#ifdef _WIN32
-    if ((setsockopt((*microSocket).socket, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout))) == -1)
-#else
     if ((setsockopt((*microSocket).socket, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout))) == -1)
 #endif
     {
