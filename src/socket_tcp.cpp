@@ -128,8 +128,10 @@ bool Socket_TCP::connectTo(const char * hostname, uint16_t port, uint32_t timeou
         return false;
     }
 
+#ifndef WIN32
     setReadTimeout(60);
     setWriteTimeout(60);
+#endif
 
     return true;
 }
