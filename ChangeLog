@@ -1,3 +1,6 @@
+Version 2.3.2
+- Removed Read/Write Timeouts for TCP Sockets (user should setup in their app)
+- Get rid of Minor compilation warnings.
 Version 2.2.0
 - Set default Read/Write Timeouts for TCP Sockets to 60 seconds.
 Version 2.1.0
