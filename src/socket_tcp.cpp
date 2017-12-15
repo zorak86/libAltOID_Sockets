@@ -24,6 +24,8 @@
 
 Socket_TCP::Socket_TCP()
 {
+    ovrReadTimeout = -1;
+    ovrWriteTimeout = -1;
 }
 
 Socket_TCP::~Socket_TCP()
@@ -37,6 +39,16 @@ void Socket_TCP::setFlag_TCP_NODELAY()
 
     int flag = 1;
     setsockopt(getSocket(),IPPROTO_TCP, TCP_NODELAY,(char *) &flag, sizeof(int));
+}
+
+void Socket_TCP::overrideReadTimeout(int tout)
+{
+    ovrReadTimeout = tout;
+}
+
+void Socket_TCP::overrideWriteTimeout(int tout)
+{
+    ovrWriteTimeout = tout;
 }
 
 bool Socket_TCP::connectTo(const char * hostname, uint16_t port, uint32_t timeout)
@@ -98,7 +110,12 @@ bool Socket_TCP::connectTo(const char * hostname, uint16_t port, uint32_t timeou
 
         if (internalConnect(getSocket(),resiter->ai_addr, resiter->ai_addrlen,timeout))
         {
-            // now it's connected...
+            // now it's connected... Set outsider timeouts...
+
+            if (ovrReadTimeout!=-1) setReadTimeout(ovrReadTimeout);
+            if (ovrWriteTimeout!=-1) setWriteTimeout(ovrWriteTimeout);
+
+            //
             if (PostConnectSubInitialization())
             {
                 connected = true;
@@ -128,8 +145,6 @@ bool Socket_TCP::connectTo(const char * hostname, uint16_t port, uint32_t timeou
         return false;
     }
 
-    //setReadTimeout(60);
-    //setWriteTimeout(60);
 
     return true;
 }

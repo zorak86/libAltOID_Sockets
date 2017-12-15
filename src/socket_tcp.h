@@ -52,6 +52,10 @@ public:
      */
     void setFlag_TCP_NODELAY();
 
+    void overrideReadTimeout(int tout = -1);
+    void overrideWriteTimeout(int tout = -1);
+
+
 protected:
     /**
      * Virtual function for protocol initialization after the connection starts (client-mode)...
@@ -66,6 +70,8 @@ private:
     bool internalConnect(int sockfd, const struct sockaddr *addr, socklen_t addrlen, uint32_t timeout);
     bool internalPassToBlocking(int sockfd);
     bool internalPassToNonBlocking(int sockfd);
+
+    int ovrReadTimeout,ovrWriteTimeout;
 };
 
 #endif // SOCKET_TCP_H
