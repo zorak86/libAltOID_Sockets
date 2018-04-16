@@ -149,7 +149,7 @@ int Socket::partialRead(void *data, uint32_t datalen)
     }
 }
 
-int Socket::partialWrite(void *data, uint32_t datalen)
+int Socket::partialWrite(const void *data, uint32_t datalen)
 {
     if (!(*microSocket).IsValidSocket()) return -1;
     if (!datalen) return 0;

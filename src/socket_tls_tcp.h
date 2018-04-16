@@ -56,7 +56,7 @@ public:
      * @param datalen data length in bytes
      * @return return the number of bytes read by the socket, zero for end of file and -1 for error.
      */
-    virtual int partialWrite(void * data, uint32_t datalen);
+    virtual int partialWrite(const void *data, uint32_t datalen);
 
     /////////////////////////
     // SSL functions:

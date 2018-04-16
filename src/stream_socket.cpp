@@ -59,7 +59,7 @@ bool Stream_Socket::writeBlock(const void *data, uint32_t datalen)
 
     // Send the raw data.
     // datalen-left_to_send is the _size_ of the data already sent.
-    while (left_to_send && (sent_bytes = partialWrite((char *) data + (datalen - left_to_send), left_to_send>4096?4096:left_to_send)) <= left_to_send)
+    while (left_to_send && (sent_bytes = partialWrite((const char *) data + (datalen - left_to_send), left_to_send>4096?4096:left_to_send)) <= left_to_send)
     {
         if (sent_bytes == -1)
         {

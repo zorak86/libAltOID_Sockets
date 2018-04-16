@@ -144,7 +144,7 @@ size_t Micro_SSL::PartialRead(void *buffer, size_t len)
     }
 }
 
-size_t Micro_SSL::PartialWrite(void *buffer, size_t len)
+size_t Micro_SSL::PartialWrite(const void *buffer, size_t len)
 {
     ssize_t sentBytes = SSL_write(sslHandle, buffer, len);
     if (sentBytes > 0)

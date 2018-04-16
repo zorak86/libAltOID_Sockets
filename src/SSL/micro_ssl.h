@@ -32,7 +32,7 @@ public:
     bool Accept();
 
     size_t PartialRead(void * buffer, size_t len);
-    size_t PartialWrite(void * buffer, size_t len);
+    size_t PartialWrite(const void *buffer, size_t len);
 
     std::list<std::string> getErrorsAndClear();
 

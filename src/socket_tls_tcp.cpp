@@ -212,7 +212,7 @@ int Socket_TLS_TCP::partialRead(void *data, uint32_t datalen)
     return ssl->PartialRead(data,datalen);
 }
 
-int Socket_TLS_TCP::partialWrite(void *data, uint32_t datalen)
+int Socket_TLS_TCP::partialWrite(const void *data, uint32_t datalen)
 {
     return ssl->PartialWrite(data,datalen);
 }
