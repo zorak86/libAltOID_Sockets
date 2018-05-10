@@ -38,7 +38,7 @@ bool Socket_UNIX::listenOn(uint16_t port, const char * listenOnAddr)
    }
 
    server_address.sun_family = AF_UNIX;
-   strncpy(server_address.sun_path, listenOnAddr, sizeof(server_address.sun_path));
+   strncpy(server_address.sun_path, listenOnAddr, sizeof(server_address.sun_path)-1);
    server_len = sizeof(server_address);
 
    if (bind(getSocket(),(struct sockaddr *)&server_address,server_len) < 0)
