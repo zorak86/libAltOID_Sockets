@@ -263,12 +263,12 @@ int Socket::getSocket() const
 
 void Socket::getRemotePair(char * address) const
 {
-	strncpy(address, remotePair, 64);
+    strncpy(address, remotePair, 64);
 }
 
 void Socket::setRemotePair(const char * address)
 {
-	strncpy(remotePair, address, 64);
+    strncpy(remotePair, address, sizeof(remotePair)-1);
 }
 
 int Socket::shutdownSocket()
