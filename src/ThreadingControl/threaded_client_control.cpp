@@ -70,7 +70,10 @@ void Threaded_Client_Control::CallCallback()
     if (clientSocket->PostAcceptSubInitialization())
     {
         // Start
-        this->CallbackFunction(obj, clientSocket);
+        if (!this->CallbackFunction(obj, clientSocket))
+        {
+            clientSocket = NULL;
+        }
     }
 }
 
