@@ -32,7 +32,7 @@ public:
      * @param timeout timeout in seconds to desist the connection.
      * @return true if successfully connected
      */
-    bool connectTo(const char * hostname, uint16_t port, uint32_t timeout = 0);
+    bool connectTo(const char * hostname, uint16_t port, uint32_t timeout = 30);
     /**
      * Accept a new TCP connection on a listening socket.
      * @return returns a socket with the new established tcp connection.

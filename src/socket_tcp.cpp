@@ -211,7 +211,12 @@ bool Socket_TCP::internalConnect(int sockfd, const sockaddr *addr, socklen_t add
             tv.tv_usec = 0;
             FD_ZERO(&myset);
             FD_SET(sockfd, &myset);
-            res2 = select(sockfd+1, NULL, &myset, NULL, &tv);
+
+            if (timeout == 0)
+                res2 = select(sockfd+1, NULL, &myset, NULL, NULL);
+            else
+                res2 = select(sockfd+1, NULL, &myset, NULL, &tv);
+
             if (res2 < 0 && errno != EINTR)
             {
                 lastError = "Error selecting...";
