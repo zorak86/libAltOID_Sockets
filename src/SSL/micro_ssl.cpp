@@ -15,7 +15,7 @@ Micro_SSL::~Micro_SSL()
 {
     if (sslHandle)
     {
-//        SSL_shutdown (sslHandle);
+        //        SSL_shutdown (sslHandle);
         SSL_free (sslHandle);
     }
     if (sslContext)
@@ -75,7 +75,7 @@ void Micro_SSL::InitHandle(bool validatePeer)
 
     if (validatePeer)
     {
-        SSL_set_verify(sslHandle, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT, 0);
+        SSL_set_verify(sslHandle, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT, nullptr);
     }
 }
 
@@ -93,11 +93,9 @@ bool Micro_SSL::Connect()
     {
     case SSL_ERROR_NONE:
         return true;
-        break;
     default:
         parseErrors();
         return false;
-        break;
     }
 }
 
@@ -117,7 +115,7 @@ bool Micro_SSL::Accept()
 
 size_t Micro_SSL::PartialRead(void *buffer, size_t len)
 {
-    ssize_t readBytes = SSL_read(sslHandle, buffer, len);
+    int readBytes = SSL_read(sslHandle, buffer, len);
     if (readBytes > 0)
     {
         return readBytes;
@@ -130,23 +128,20 @@ size_t Micro_SSL::PartialRead(void *buffer, size_t len)
         case SSL_ERROR_WANT_READ:
             parseErrors();
             return -1;
-            break;
         case SSL_ERROR_ZERO_RETURN:
             // Socket closed.
             parseErrors();
-            return -1;
-            break;
+            return ((size_t)-1);
         default:
             parseErrors();
-            return -1;
-            break;
+            return ((size_t)-1);
         }
     }
 }
 
 size_t Micro_SSL::PartialWrite(const void *buffer, size_t len)
 {
-    ssize_t sentBytes = SSL_write(sslHandle, buffer, len);
+    int sentBytes = SSL_write(sslHandle, buffer, len);
     if (sentBytes > 0)
     {
         return sentBytes;
@@ -160,17 +155,14 @@ size_t Micro_SSL::PartialWrite(const void *buffer, size_t len)
             // Must wait a little bit until the socket buffer is free
             usleep(100000);
             return 0;
-            break;
         case SSL_ERROR_ZERO_RETURN:
             // Socket closed...
             parseErrors();
-            return -1;
-            break;
+            return ((size_t)-1);
         default:
             // Another SSL Error.
             parseErrors();
-            return -1;
-            break;
+            return ((size_t)-1);
         }
     }
 }
@@ -180,6 +172,23 @@ std::list<std::string> Micro_SSL::getErrorsAndClear()
     std::list<std::string> r = errors;
     errors.clear();
     return r;
+}
+
+std::string Micro_SSL::getPeerCommonName()
+{
+    char certCNText[512]="";
+    X509 * cert = SSL_get_peer_certificate(sslHandle);
+    if(cert)
+    {
+        X509_NAME * certName = X509_get_subject_name(cert);
+        if (certName)
+        {
+            X509_NAME_get_text_by_NID(certName,NID_commonName,certCNText,511);
+            X509_NAME_free(certName);
+        }
+        X509_free(cert);
+    }
+    return std::string(certCNText);
 }
 
 std::string Micro_SSL::getCipherName()
@@ -204,7 +213,7 @@ bool Micro_SSL::validateConnection()
     X509 *cert;
     bool bValid  = false;
     cert = SSL_get_peer_certificate(sslHandle);
-    if ( cert != NULL )
+    if ( cert )
     {
         long res = SSL_get_verify_result(sslHandle);
         if (res == X509_V_OK)

@@ -36,6 +36,9 @@ public:
 
     std::list<std::string> getErrorsAndClear();
 
+    std::string getPeerCommonName();
+    std::string getPeerSubject();
+
     std::string getCipherName();
     cipherBits getCipherBits();
     std::string getCipherVersion();

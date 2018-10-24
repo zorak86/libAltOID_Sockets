@@ -132,6 +132,12 @@ std::list<std::string> Socket_TLS_TCP::getSslErrorsAndClear()
     return sslErrors3;
 }
 
+string Socket_TLS_TCP::getSSLPeerCommonName()
+{
+    if (ssl->isInitialized()) return "";
+    return ssl->getPeerCommonName();
+}
+
 void Socket_TLS_TCP::setServer(bool value)
 {
     isServer = value;

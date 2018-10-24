@@ -97,6 +97,13 @@ public:
      */
     std::list<std::string> getSslErrorsAndClear();
 
+
+    /**
+     * @brief getSSLPeerCommonName
+     * @return peer common name
+     */
+    std::string getSSLPeerCommonName();
+
 protected:
     /**
      * function for TLS client protocol initialization after the connection starts (client-mode)...
