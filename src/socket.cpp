@@ -263,7 +263,7 @@ int Socket::getSocket() const
 
 void Socket::getRemotePair(char * address) const
 {
-    strncpy(address, remotePair, 64);
+    strncpy(address, remotePair, INET6_ADDRSTRLEN);
 }
 
 void Socket::setRemotePair(const char * address)
