@@ -8,6 +8,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netinet/tcp.h>
+#include <netinet/in.h>
 #include <netdb.h>
 #endif
 
@@ -56,7 +57,7 @@ bool Socket_TCP::connectTo(const char * hostname, uint16_t port, uint32_t timeou
     char servport[32];
     int rc;
     struct in6_addr serveraddr;
-    struct addrinfo hints, *res=NULL;
+    struct addrinfo hints, *res=nullptr;
 
     memset(&hints, 0x00, sizeof(hints));
 
@@ -108,12 +109,36 @@ bool Socket_TCP::connectTo(const char * hostname, uint16_t port, uint32_t timeou
         // Set the read timeout here. (to zero)
         setReadTimeout(0);
 
-        if (internalConnect(getSocket(),resiter->ai_addr, resiter->ai_addrlen,timeout))
+        sockaddr * curAddr = resiter->ai_addr;
+        struct sockaddr_in * curAddrIn = (sockaddr_in *)curAddr;
+
+        if (internalConnect(getSocket(),curAddr, resiter->ai_addrlen,timeout))
         {
             // now it's connected... Set outsider timeouts...
 
             if (ovrReadTimeout!=-1) setReadTimeout(ovrReadTimeout);
             if (ovrWriteTimeout!=-1) setWriteTimeout(ovrWriteTimeout);
+
+            // Set remote pairs...
+            switch (curAddr->sa_family)
+            {
+            case AF_INET:
+            {
+                char ipAddr4[INET_ADDRSTRLEN+1]="";
+                inet_ntop(AF_INET, &(curAddrIn->sin_addr), ipAddr4, INET_ADDRSTRLEN);
+                setRemotePair(ipAddr4);
+            } break;
+            case AF_INET6:
+            {
+                char ipAddr6[INET6_ADDRSTRLEN+1]="";
+                inet_ntop(AF_INET6, &(curAddrIn->sin_addr), ipAddr6, INET6_ADDRSTRLEN);
+                setRemotePair(ipAddr6);
+            } break;
+            default:
+                break;
+            }
+
+            setRemotePort(port);
 
             //
             if (PostConnectSubInitialization())
@@ -153,7 +178,7 @@ Stream_Socket * Socket_TCP::acceptConnection()
 {
     int sdconn;
 
-    if (!isValidSocket()) return NULL;
+    if (!isValidSocket()) return nullptr;
 
     Stream_Socket * cursocket;
 
@@ -166,8 +191,8 @@ Stream_Socket * Socket_TCP::acceptConnection()
         cursocket = new Socket_TCP;
         // Set the proper socket-
         cursocket->setSocket(sdconn);
-        char ipAddr[80];
-        inet_ntop(AF_INET, &cli_addr.sin_addr, ipAddr, sizeof(ipAddr));
+        char ipAddr[INET_ADDRSTRLEN+1];
+        inet_ntop(AF_INET, &cli_addr.sin_addr, ipAddr, INET_ADDRSTRLEN);
         cursocket->setRemotePort(ntohs(cli_addr.sin_port));
         cursocket->setRemotePair(ipAddr);
     }
@@ -175,7 +200,7 @@ Stream_Socket * Socket_TCP::acceptConnection()
     else
     {
         lastError = "accept() failed";
-        return NULL;
+        return nullptr;
     }
 
     // return the socket class.
@@ -213,9 +238,9 @@ bool Socket_TCP::internalConnect(int sockfd, const sockaddr *addr, socklen_t add
             FD_SET(sockfd, &myset);
 
             if (timeout == 0)
-                res2 = select(sockfd+1, NULL, &myset, NULL, NULL);
+                res2 = select(sockfd+1, nullptr, &myset, nullptr, nullptr);
             else
-                res2 = select(sockfd+1, NULL, &myset, NULL, &tv);
+                res2 = select(sockfd+1, nullptr, &myset, nullptr, &tv);
 
             if (res2 < 0 && errno != EINTR)
             {
@@ -277,7 +302,7 @@ bool Socket_TCP::internalPassToBlocking(int sockfd)
 #else
     long arg;
     // Set to blocking mode again...
-    if( (arg = fcntl(sockfd, F_GETFL, NULL)) < 0)
+    if( (arg = fcntl(sockfd, F_GETFL, nullptr)) < 0)
     {
         lastError = "Error setting blocking... (1)";
         return false;
@@ -303,7 +328,7 @@ bool Socket_TCP::internalPassToNonBlocking(int sockfd)
     long arg;
 
     // Set non-blocking
-    if( (arg = fcntl(sockfd, F_GETFL, NULL)) < 0)
+    if( (arg = fcntl(sockfd, F_GETFL, nullptr)) < 0)
     {
         lastError = "Error setting non-blocking... (1)";
         return false;
