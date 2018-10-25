@@ -46,10 +46,10 @@ bool Micro_SSL::isInitialized()
 
 bool Micro_SSL::setCA(const std::string &file)
 {
-    if (SSL_CTX_load_verify_locations(sslContext, file.c_str(),NULL) == 1)
+    if (SSL_CTX_load_verify_locations(sslContext, file.c_str(),nullptr) == 1)
     {
         list = SSL_load_client_CA_file( file.c_str() );
-        if( list != NULL )
+        if( list != nullptr )
         {
             SSL_CTX_set_client_CA_list( sslContext, list );
             // It takes ownership. (list now belongs to sslContext)

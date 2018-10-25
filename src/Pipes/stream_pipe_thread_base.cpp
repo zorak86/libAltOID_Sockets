@@ -2,8 +2,8 @@
 
 Stream_Pipe_Thread_Base::Stream_Pipe_Thread_Base()
 {
-    block_fwd = NULL;
-    block_rev = NULL;
+    block_fwd = nullptr;
+    block_rev = nullptr;
     setBlockSize(8192);
 }
 

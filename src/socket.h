@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <memory>
 #include <unistd.h>
+#include <netinet/in.h>
 
 #include <alt_mutex/mutex_instance.h>
 
@@ -216,7 +217,7 @@ protected:
     /**
      * buffer with the remote pair address.
      */
-    char remotePair[64];
+    char remotePair[INET6_ADDRSTRLEN+1];
     /**
      * @brief remotePort remote port when accepting connections.
      */

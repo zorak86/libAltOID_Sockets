@@ -84,7 +84,7 @@ bool Stream_Socket::writeBlock(const void *data, uint32_t datalen)
 
 Stream_Socket * Stream_Socket::acceptConnection()
 {
-    return NULL;
+    return nullptr;
 }
 
 bool Stream_Socket::PostAcceptSubInitialization()

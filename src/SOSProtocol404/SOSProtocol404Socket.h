@@ -87,7 +87,7 @@ public:
 	 * Read and allocate a memory space data block of maximum of 4g bytes (teotherical).
 	 * NOTE: Allocation occurs with new [], so delete it with delete []
 	 * @param datalen in: maximum data length supported, out: data retrieved.
-	 * @return memory allocated with the retrieved data or NULL if failed.
+	 * @return memory allocated with the retrieved data or nullptr if failed.
      */
     void * readBlock32WAlloc(unsigned int * datalen);
     /**
@@ -95,7 +95,7 @@ public:
 	 * @param datalen in: maximum data length supported (should be min: 65536), out: data retrieved.
 	 * @param delim delimiter.
 	 * @param delimBytes delimiter size (max: 65535 bytes).
-	 * @return memory allocated with the retrieved data or NULL if failed.
+	 * @return memory allocated with the retrieved data or nullptr if failed.
      */
     void * readBlock32WAllocAndDelim(unsigned int * datalen, unsigned char * delim, uint16_t delimBytes);
 
@@ -119,7 +119,7 @@ public:
      * Read and allocate a memory space data block of maximum of 2^sizel bytes (teotherical).
 	 * NOTE: Allocation occurs with new [], so delete it with delete []
 	 * @param datalen in: maximum data length supported, out: data retrieved.
-	 * @return memory allocated with the retrieved data or NULL if failed.
+	 * @return memory allocated with the retrieved data or nullptr if failed.
      */
     void * readBlockWAlloc(uint32_t * datalen, unsigned char sizel = 8);
 

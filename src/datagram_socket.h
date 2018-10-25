@@ -15,7 +15,7 @@ struct DatagramBlock
 {
     DatagramBlock()
     {
-        data = NULL;
+        data = nullptr;
         datalen = -1;
     }
     ~DatagramBlock()

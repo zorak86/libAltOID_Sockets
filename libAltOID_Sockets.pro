@@ -83,7 +83,7 @@ win32:LIBS += -lAltOID_Mutex1
 
 TARGET = AltOID_Sockets
 TEMPLATE = lib
-VERSION      = 2.4.0
+VERSION      = 2.4.1
 # INSTALLATION:
 target.path = $$PREFIX/lib
 header_files.files = $$HEADERS

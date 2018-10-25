@@ -57,7 +57,7 @@ public:
      * @param datalen data length in bytes
      * @return true if the data block was sucessfully received.
      */
-    virtual bool readBlock(void * data, uint32_t datalen, uint32_t * bytesReceived = NULL);
+    virtual bool readBlock(void * data, uint32_t datalen, uint32_t * bytesReceived = nullptr);
 
 
 };

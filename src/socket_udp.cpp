@@ -19,14 +19,14 @@
 
 Socket_UDP::Socket_UDP()
 {
-	res = NULL;
+	res = nullptr;
 }
 
 Socket_UDP::~Socket_UDP()
 {
 	if (res)
 		freeaddrinfo(res);
-	res = NULL;
+	res = nullptr;
 }
 
 bool Socket_UDP::isConnected()

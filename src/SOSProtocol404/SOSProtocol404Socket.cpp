@@ -121,24 +121,24 @@ void* SOSProtocol404_Socket::readBlock32WAlloc(unsigned int* datalen)
 		if (*datalen < len)  // len received exceeded the max datalen permited.
 		{
 			*datalen = 0;
-			return NULL;
+			return nullptr;
 		}
 		// download and resize
 		unsigned char * odata = new unsigned char[len];
 		if (!odata)
-            return NULL; // not enough memory.
+            return nullptr; // not enough memory.
         uint32_t r;
         bool ok = sock->readBlock(odata, len,&r) && r==len;
 		if (!ok)
 		{
 			delete [] odata;
 			*datalen = 0;
-			return NULL;
+			return nullptr;
 		}
 		return odata;
 	}
 	*datalen = 0;
-	return NULL;
+	return nullptr;
 }
 
 /* [0][1][2]
@@ -169,7 +169,7 @@ int SOSProtocol404_Socket::read64KBlockDelim(unsigned char * block, unsigned cha
 void* SOSProtocol404_Socket::readBlock32WAllocAndDelim(unsigned int* datalen,
         unsigned char* delim, uint16_t delimBytes)
 {
-	if (*datalen<=65535) return NULL; // It should at least have 65k of buffer.
+	if (*datalen<=65535) return nullptr; // It should at least have 65k of buffer.
 
 	unsigned char * currentBlock = new unsigned char[65536];
 	unsigned int currentBlockSize = 65536;
@@ -180,9 +180,9 @@ void* SOSProtocol404_Socket::readBlock32WAllocAndDelim(unsigned int* datalen,
 		int bytesRecv = read64KBlockDelim(currentBlock+currentBlockSize-65536, delim, delimBytes, blockNo);
 		if (bytesRecv == -2)
 		{
-			// maybe connection closed... returning NULL;
+			// maybe connection closed... returning nullptr;
 			delete [] currentBlock;
-			return NULL;
+			return nullptr;
 		}
 		else if (bytesRecv == -1)
 		{
@@ -190,7 +190,7 @@ void* SOSProtocol404_Socket::readBlock32WAllocAndDelim(unsigned int* datalen,
 			{
 				// Can't request more memory. erase current...
 				delete [] currentBlock;
-				return NULL;
+				return nullptr;
 			}
 			else
 			{
@@ -235,7 +235,7 @@ bool SOSProtocol404_Socket::readBlock16(void* data, uint16_t datalen,
 
 void* SOSProtocol404_Socket::readBlockWAlloc(uint32_t *datalen, unsigned char sizel)
 {
-    if (!datalen) return NULL;
+    if (!datalen) return nullptr;
 
     bool readOK = false;
     uint32_t lenReceived;
@@ -252,27 +252,27 @@ void* SOSProtocol404_Socket::readBlockWAlloc(uint32_t *datalen, unsigned char si
         if (lenReceived > *datalen)  // len received exceeded the max datalen permited.
 		{
 			*datalen = 0;
-			return NULL;
+			return nullptr;
 		}
         *datalen = lenReceived-1;
 		// download and resize
         unsigned char * odata = new unsigned char[lenReceived];
         odata[lenReceived-1]=0;
-        if (!odata) return NULL; // not enough memory.
+        if (!odata) return nullptr; // not enough memory.
         uint32_t r;
         bool ok = sock->readBlock(odata, lenReceived-1, &r) && r==lenReceived-1;
 		if (!ok)
 		{
             delete [] odata;
 			*datalen = 0;
-			return NULL;
+			return nullptr;
 		}
 		return odata;
 	}
     else
     {
         *datalen = 0;
-        return NULL;
+        return nullptr;
     }
 }
 

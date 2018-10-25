@@ -6,16 +6,16 @@ void *ControlThread(void *d)
     Threaded_Stream_Acceptor * threadMasterControl = (Threaded_Stream_Acceptor *)d;
     // Accept until it fails:
     while (threadMasterControl->acceptClient()) {}
-    pthread_exit(NULL);
-    return NULL;
+    pthread_exit(nullptr);
+    return nullptr;
 }
 
 Threaded_Stream_Acceptor::Threaded_Stream_Acceptor()
 {
-	CallbackFunction = NULL;
+	CallbackFunction = nullptr;
 	acceptorThread = 0;
-	acceptorSocket = NULL;
-	obj = NULL;
+	acceptorSocket = nullptr;
+	obj = nullptr;
     markOnEmptyList = false;
     initialized = false;
 }
@@ -90,7 +90,7 @@ Threaded_Stream_Acceptor::~Threaded_Stream_Acceptor()
     acceptorSocket->shutdownSocket();
 
     // Accept the listen-injection thread. (no new threads will be added from here)
-    pthread_join(acceptorThread,NULL);
+    pthread_join(acceptorThread,nullptr);
 
     // Now we can safetly free the acceptor socket resource.
     acceptorSocket->closeSocket();
@@ -126,7 +126,7 @@ Threaded_Stream_Acceptor::~Threaded_Stream_Acceptor()
 // NEVER DELETE THIS CLASS AFTER THE START, JUST STOP AND WILL BE DELETED
 bool Threaded_Stream_Acceptor::start()
 {
-    if (!pthread_create(&acceptorThread, NULL, ControlThread, this))
+    if (!pthread_create(&acceptorThread, nullptr, ControlThread, this))
     {
         initialized = true;
 /*#ifndef _WIN32

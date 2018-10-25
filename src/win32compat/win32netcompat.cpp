@@ -19,7 +19,7 @@ int inet_pton(int af, const char *src, void *dst)
     strncpy (src_copy, src, INET6_ADDRSTRLEN+1);
     src_copy[INET6_ADDRSTRLEN] = 0;
 
-    if (WSAStringToAddressA(src_copy, af, NULL, (struct sockaddr *)&ss, &size) == 0) {
+    if (WSAStringToAddressA(src_copy, af, nullptr, (struct sockaddr *)&ss, &size) == 0) {
         switch(af) {
         case AF_INET:
             *(struct in_addr *)dst = ((struct sockaddr_in *)&ss)->sin_addr;
@@ -48,8 +48,8 @@ const char *inet_ntop(int af, const void *src, char *dst, socklen_t size)
         ((struct sockaddr_in6 *)&ss)->sin6_addr = *(struct in6_addr *)src;
         break;
     default:
-        return NULL;
+        return nullptr;
     }
     /* cannot direclty use &size because of strict aliasing rules */
-    return (WSAAddressToStringA((struct sockaddr *)&ss, sizeof(ss), NULL, dst, &s) == 0)? dst : NULL;
+    return (WSAAddressToStringA((struct sockaddr *)&ss, sizeof(ss), nullptr, dst, &s) == 0)? dst : nullptr;
 }

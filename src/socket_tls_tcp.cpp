@@ -187,7 +187,7 @@ string Socket_TLS_TCP::getCipherVersion()
 Stream_Socket * Socket_TLS_TCP::acceptConnection()
 {
     Stream_Socket * mainSock = Socket_TCP::acceptConnection();
-    if (!mainSock) return NULL;
+    if (!mainSock) return nullptr;
     Socket_TLS_TCP * tlsSock = new Socket_TLS_TCP; // Convert to this thing...
 
     isServer = true;

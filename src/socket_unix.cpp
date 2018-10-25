@@ -91,9 +91,9 @@ Stream_Socket * Socket_UNIX::acceptConnection()
 {
     int sdconn;
 
-    Stream_Socket * cursocket = NULL;
+    Stream_Socket * cursocket = nullptr;
 
-    if ((sdconn = accept(getSocket(), NULL, NULL)) >= 0)
+    if ((sdconn = accept(getSocket(), nullptr, nullptr)) >= 0)
     {
         cursocket = new Stream_Socket;
         // Set the proper socket-

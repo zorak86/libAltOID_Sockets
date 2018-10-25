@@ -8,18 +8,18 @@ void * pipeThread(void * _stp)
     {
         delete stp;
     }
-    pthread_exit(NULL);
-    return NULL;
+    pthread_exit(nullptr);
+    return nullptr;
 }
 
 Stream_Pipe::Stream_Pipe()
 {
-    customPipeProcessor = NULL;
+    customPipeProcessor = nullptr;
     sentBytes = 0;
     recvBytes = 0;
 
-    socket_peers[0] = NULL;
-    socket_peers[1] = NULL;
+    socket_peers[0] = nullptr;
+    socket_peers[1] = nullptr;
 
     finishingPeer = -1;
     autoDeleteSocketsOnExit = false;
@@ -45,7 +45,7 @@ bool Stream_Pipe::StartThreaded(bool _autoDeleteStreamPipeOnExit, bool detach)
 
     autoDeleteStreamPipeOnExit = _autoDeleteStreamPipeOnExit;
 
-    pthread_create(&pipeThreadP, NULL, pipeThread, this);
+    pthread_create(&pipeThreadP, nullptr, pipeThread, this);
 
     if (autoDeleteStreamPipeOnExit || detach)
         pthread_detach(pipeThreadP);
@@ -55,7 +55,7 @@ bool Stream_Pipe::StartThreaded(bool _autoDeleteStreamPipeOnExit, bool detach)
 
 int Stream_Pipe::WaitForThread()
 {
-    pthread_join(pipeThreadP,NULL);
+    pthread_join(pipeThreadP,nullptr);
     return finishingPeer;
 }
 
@@ -63,8 +63,8 @@ void * remotePeerThread(void * _stp)
 {
     Stream_Pipe * stp = (Stream_Pipe *)_stp;
     stp->StartPeerBlocking(1);
-    pthread_exit(NULL);
-    return NULL;
+    pthread_exit(nullptr);
+    return nullptr;
 }
 
 int Stream_Pipe::StartBlocking()
@@ -82,9 +82,9 @@ int Stream_Pipe::StartBlocking()
     if (customPipeProcessor->startPipeSync())
     {
         pthread_t remotePeerThreadP;
-        pthread_create(&remotePeerThreadP, NULL, remotePeerThread, this);
+        pthread_create(&remotePeerThreadP, nullptr, remotePeerThread, this);
         StartPeerBlocking(0);
-        pthread_join(remotePeerThreadP,NULL);
+        pthread_join(remotePeerThreadP,nullptr);
     }
 
     // All connections terminated.
@@ -98,7 +98,7 @@ int Stream_Pipe::StartBlocking()
     if ( autoDeleteCustomPipeOnClose )
     {
         delete customPipeProcessor;
-        customPipeProcessor = NULL;
+        customPipeProcessor = nullptr;
     }
 
     return finishingPeer;
@@ -136,7 +136,7 @@ bool Stream_Pipe::SetPeer(unsigned char i, Stream_Socket *s)
 
 Stream_Socket *Stream_Pipe::GetPeer(unsigned char i)
 {
-    if (i>1) return NULL;
+    if (i>1) return nullptr;
     return socket_peers[i];
 }
 

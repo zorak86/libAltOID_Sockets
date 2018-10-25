@@ -7,17 +7,17 @@ void *ClientThread(void *d)
     Threaded_Stream_Acceptor * threadedAcceptedControl = (Threaded_Stream_Acceptor *)threadClient->GetParent();
     threadClient->CallCallback();
     threadedAcceptedControl->finalizeThreadElement(threadClient);
-    pthread_exit(NULL);
-    return NULL;
+    pthread_exit(nullptr);
+    return nullptr;
 }
 
 Threaded_Client_Control::Threaded_Client_Control()
 {
-	CallbackFunction = NULL;
+	CallbackFunction = nullptr;
 	clientThread = 0;
-	parent = NULL;
-	obj = NULL;
-    clientSocket = NULL;
+	parent = nullptr;
+	obj = nullptr;
+    clientSocket = nullptr;
 }
 
 Threaded_Client_Control::~Threaded_Client_Control()
@@ -31,7 +31,7 @@ Threaded_Client_Control::~Threaded_Client_Control()
 
 void Threaded_Client_Control::Start()
 {
-    int r = pthread_create(&clientThread, NULL, ClientThread, this);
+    int r = pthread_create(&clientThread, nullptr, ClientThread, this);
     if (!r) pthread_detach(clientThread);
 /*#ifndef _WIN32
     pthread_setname_np(clientThread, "ACCPTD_CLI");
@@ -45,7 +45,7 @@ void Threaded_Client_Control::StopSocket()
 /*
 void Threaded_Client_Control::Join()
 {
-    pthread_join(clientThread,NULL);
+    pthread_join(clientThread,nullptr);
 }*/
 
 void Threaded_Client_Control::SetCallbackFunction(bool(*_CallbackFunction)(void *, Stream_Socket *), void *obj)
@@ -72,7 +72,7 @@ void Threaded_Client_Control::CallCallback()
         // Start
         if (!this->CallbackFunction(obj, clientSocket))
         {
-            clientSocket = NULL;
+            clientSocket = nullptr;
         }
     }
 }
