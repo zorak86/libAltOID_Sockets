@@ -1,6 +1,7 @@
 #ifndef SOCKET_UNIX_H
 #define SOCKET_UNIX_H
 
+#ifndef _WIN32
 #include "stream_socket.h"
 
 /**
@@ -33,6 +34,6 @@ public:
      */
     Stream_Socket *acceptConnection();
 };
-
+#endif
 
 #endif // SOCKET_UNIX_H

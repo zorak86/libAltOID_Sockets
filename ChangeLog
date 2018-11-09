@@ -1,3 +1,5 @@
+Version 3.0.1
+- automake
 Version 2.3.2
 - Removed Read/Write Timeouts for TCP Sockets (user should setup in their app)
 - Get rid of Minor compilation warnings.

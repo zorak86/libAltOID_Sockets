@@ -8,7 +8,7 @@
 
 #ifdef _WIN32
 #include <winsock2.h>
-#include <Ws2tcpip.h>
+#include <ws2tcpip.h>
 #else
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -155,7 +155,7 @@ int Socket::partialWrite(const void *data, uint32_t datalen)
     if (!datalen) return 0;
     if (!useWrite)
     {
-#ifdef WIN32
+#ifdef _WIN32
         ssize_t sendLen = send((*microSocket).socket, (char *) data, datalen, 0);
 #else
         ssize_t sendLen = send((*microSocket).socket, (char *) data, datalen, MSG_NOSIGNAL);

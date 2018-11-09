@@ -1,4 +1,5 @@
 #include "win32netcompat.h"
+#ifdef _WIN32
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -53,3 +54,4 @@ const char *inet_ntop(int af, const void *src, char *dst, socklen_t size)
     /* cannot direclty use &size because of strict aliasing rules */
     return (WSAAddressToStringA((struct sockaddr *)&ss, sizeof(ss), nullptr, dst, &s) == 0)? dst : nullptr;
 }
+#endif

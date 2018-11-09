@@ -83,7 +83,7 @@ win32:LIBS += -lAltOID_Mutex1
 
 TARGET = AltOID_Sockets
 TEMPLATE = lib
-VERSION      = 2.4.1
+VERSION      = 3.0.1
 # INSTALLATION:
 target.path = $$PREFIX/lib
 header_files.files = $$HEADERS
@@ -96,7 +96,10 @@ DISTFILES += \
     AUTHORS \
     ChangeLog \
     INSTALL \
-    README.md
+    README.md \
+    configure.ac \
+    Makefile.am \
+    src/Makefile.am
 
 build_pass:CONFIG(debug, debug|release) {
     unix: TARGET = $$join(TARGET,,,_debug)

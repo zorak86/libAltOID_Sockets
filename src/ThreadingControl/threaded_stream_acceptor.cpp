@@ -7,7 +7,6 @@ void *ControlThread(void *d)
     // Accept until it fails:
     while (threadMasterControl->acceptClient()) {}
     pthread_exit(nullptr);
-    return nullptr;
 }
 
 Threaded_Stream_Acceptor::Threaded_Stream_Acceptor()
@@ -129,9 +128,7 @@ bool Threaded_Stream_Acceptor::start()
     if (!pthread_create(&acceptorThread, nullptr, ControlThread, this))
     {
         initialized = true;
-/*#ifndef _WIN32
         pthread_setname_np(acceptorThread, "STR_ACCPTOR");
-#endif*/
         return true;
     }
     else

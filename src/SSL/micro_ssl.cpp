@@ -1,7 +1,7 @@
 #include "micro_ssl.h"
 #include <unistd.h>
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <openssl/safestack.h>
 #endif
 
@@ -233,7 +233,7 @@ bool Micro_SSL::validateConnection()
 void Micro_SSL::parseErrors()
 {
     char buf[512];
-    u_long err;
+    unsigned long int err;
     while ((err = ERR_get_error()) != 0)
     {
         ERR_error_string_n(err, buf, sizeof(buf));

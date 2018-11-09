@@ -4,7 +4,12 @@
 #include <stdint.h>
 #include <memory>
 #include <unistd.h>
+
+#ifdef _WIN32
+#include <ws2tcpip.h>
+#else
 #include <netinet/in.h>
+#endif
 
 #include <alt_mutex/mutex_instance.h>
 

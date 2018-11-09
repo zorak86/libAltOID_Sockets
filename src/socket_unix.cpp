@@ -1,5 +1,6 @@
 #include "socket_unix.h"
 
+#ifndef _WIN32
 #include <sys/types.h>
 #include <unistd.h>
 #include <string.h>
@@ -108,3 +109,4 @@ Stream_Socket * Socket_UNIX::acceptConnection()
     // return the socket class.
     return cursocket;
 }
+#endif

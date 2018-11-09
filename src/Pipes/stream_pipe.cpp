@@ -9,7 +9,6 @@ void * pipeThread(void * _stp)
         delete stp;
     }
     pthread_exit(nullptr);
-    return nullptr;
 }
 
 Stream_Pipe::Stream_Pipe()
@@ -64,7 +63,6 @@ void * remotePeerThread(void * _stp)
     Stream_Pipe * stp = (Stream_Pipe *)_stp;
     stp->StartPeerBlocking(1);
     pthread_exit(nullptr);
-    return nullptr;
 }
 
 int Stream_Pipe::StartBlocking()

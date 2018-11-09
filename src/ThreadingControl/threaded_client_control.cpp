@@ -8,7 +8,6 @@ void *ClientThread(void *d)
     threadClient->CallCallback();
     threadedAcceptedControl->finalizeThreadElement(threadClient);
     pthread_exit(nullptr);
-    return nullptr;
 }
 
 Threaded_Client_Control::Threaded_Client_Control()
@@ -32,10 +31,8 @@ Threaded_Client_Control::~Threaded_Client_Control()
 void Threaded_Client_Control::Start()
 {
     int r = pthread_create(&clientThread, nullptr, ClientThread, this);
-    if (!r) pthread_detach(clientThread);
-/*#ifndef _WIN32
     pthread_setname_np(clientThread, "ACCPTD_CLI");
-#endif*/
+    if (!r) pthread_detach(clientThread);
 }
 
 void Threaded_Client_Control::StopSocket()

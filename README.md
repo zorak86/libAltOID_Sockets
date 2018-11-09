@@ -2,7 +2,7 @@
 
 Alternative OpenSource Socket Library - by zorak x86   
 License: LGPL v3  
-Version: 2.1.0
+Version: 3.0.1
 Requires: libAltOID_Mutex libpthread libssl libcrypto
 
 ## Usage

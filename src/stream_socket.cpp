@@ -11,7 +11,7 @@
 #include <sys/socket.h>
 #else
 #include <winsock2.h>
-#include <Ws2tcpip.h>
+#include <ws2tcpip.h>
 #endif
 #include <string.h>
 #include <unistd.h>
@@ -29,7 +29,7 @@ std::pair<Stream_Socket,Stream_Socket> Stream_Socket::GetSocketPair()
 {
     int sockets[2];
     std::pair<Stream_Socket,Stream_Socket> p;
-#ifndef WIN32
+#ifndef _WIN32
     if (socketpair(AF_UNIX, SOCK_STREAM, 0, sockets) < 0)
     {
         // ERROR:...
