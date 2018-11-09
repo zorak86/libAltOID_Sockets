@@ -103,7 +103,8 @@ DISTFILES += \
     autogen.sh \
     m4/ax_pthread.m4 \
     README \
-    NEWS
+    NEWS \
+    m4/ax_check_openssl.m4
 
 build_pass:CONFIG(debug, debug|release) {
     unix: TARGET = $$join(TARGET,,,_debug)
