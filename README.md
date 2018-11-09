@@ -26,7 +26,9 @@ And some features like:
 
 ## Build instructions (using libtool)
 
+```
 autoconf -i (or ./autogen.sh)
 ./configure --prefix=/usr
 make -j8
 make install
+```
