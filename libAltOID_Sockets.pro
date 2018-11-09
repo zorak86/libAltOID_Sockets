@@ -76,18 +76,18 @@ win32:LIBS += -lws2_32
 }
 
 CONFIG(debug, debug|release) {
-win32:LIBS += -lAltOID_Mutexd1
+win32:LIBS += -lalt_mutex
 } else {
-win32:LIBS += -lAltOID_Mutex1
+win32:LIBS += -lalt_mutex
 }
 
-TARGET = AltOID_Sockets
+TARGET = alt_sockets
 TEMPLATE = lib
 VERSION      = 3.0.1
 # INSTALLATION:
 target.path = $$PREFIX/lib
 header_files.files = $$HEADERS
-header_files.path = $$PREFIX/include/alt_sockets
+header_files.path = $$PREFIX/include/$$TARGET
 INSTALLS += target
 INSTALLS += header_files
 
@@ -99,7 +99,9 @@ DISTFILES += \
     README.md \
     configure.ac \
     Makefile.am \
-    src/Makefile.am
+    src/Makefile.am \
+    autogen.sh \
+    m4/ax_pthread.m4
 
 build_pass:CONFIG(debug, debug|release) {
     unix: TARGET = $$join(TARGET,,,_debug)
