@@ -4,6 +4,12 @@
 .settings/*
 aclocal.m4
 autom4te.cache/*
+
+compile 
+libtool
+Makefile
+src/Makefile
+
 config.guess
 config.h.in
 config.sub
@@ -13,6 +19,8 @@ install-sh
 missing
 Makefile.in
 ltmain.sh
+*/.*
+.lib*
 
 *.user*
 
