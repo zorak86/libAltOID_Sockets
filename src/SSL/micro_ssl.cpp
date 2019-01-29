@@ -17,10 +17,12 @@ Micro_SSL::~Micro_SSL()
     {
         //        SSL_shutdown (sslHandle);
         SSL_free (sslHandle);
+        sslHandle = nullptr;
     }
     if (sslContext)
     {
         SSL_CTX_free(sslContext);
+        sslContext = nullptr;
     }
 }
 
@@ -41,7 +43,8 @@ bool Micro_SSL::InitContext(bool serverMode)
 
 bool Micro_SSL::isInitialized()
 {
-    return sslHandle!=nullptr;
+    bool r = sslHandle!=nullptr;
+    return r;
 }
 
 bool Micro_SSL::setCA(const std::string &file)
@@ -72,7 +75,7 @@ bool Micro_SSL::setKEY(const std::string &file)
 void Micro_SSL::InitHandle(bool validatePeer)
 {
     sslHandle = SSL_new(sslContext);
-
+    
     if (validatePeer)
     {
         SSL_set_verify(sslHandle, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT, nullptr);
@@ -177,14 +180,13 @@ std::list<std::string> Micro_SSL::getErrorsAndClear()
 std::string Micro_SSL::getPeerCommonName()
 {
     char certCNText[512]="";
-    X509 * cert = SSL_get_peer_certificate(sslHandle);
+    X509 * cert = SSL_get_peer_certificate(sslHandle);    
     if(cert)
     {
         X509_NAME * certName = X509_get_subject_name(cert);
         if (certName)
         {
             X509_NAME_get_text_by_NID(certName,NID_commonName,certCNText,511);
-            X509_NAME_free(certName);
         }
         X509_free(cert);
     }
