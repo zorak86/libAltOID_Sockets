@@ -123,6 +123,21 @@ bool Socket_TLS_TCP::InitSSLContext()
     return true;
 }
 
+std::string Socket_TLS_TCP::getCa_file() const
+{
+    return ca_file;
+}
+
+std::string Socket_TLS_TCP::getKey_file() const
+{
+    return key_file;
+}
+
+std::string Socket_TLS_TCP::getCrt_file() const
+{
+    return crt_file;
+}
+
 std::list<std::string> Socket_TLS_TCP::getSslErrorsAndClear()
 {
     std::list<std::string> sslErrors2 = ssl->getErrorsAndClear();
@@ -134,7 +149,8 @@ std::list<std::string> Socket_TLS_TCP::getSslErrorsAndClear()
 
 string Socket_TLS_TCP::getSSLPeerCommonName()
 {
-    if (ssl->isInitialized()) return "";
+    if (!ssl->isInitialized()) 
+        return "";
     return ssl->getPeerCommonName();
 }
 

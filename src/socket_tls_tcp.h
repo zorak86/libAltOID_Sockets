@@ -104,6 +104,12 @@ public:
      */
     std::string getSSLPeerCommonName();
 
+    std::string getCrt_file() const;
+    
+    std::string getKey_file() const;
+    
+    std::string getCa_file() const;
+    
 protected:
     /**
      * function for TLS client protocol initialization after the connection starts (client-mode)...
