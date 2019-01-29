@@ -25,6 +25,7 @@ Threaded_Client_Control::~Threaded_Client_Control()
     {
         clientSocket->closeSocket(); // close the socket when the thread ends...
         delete clientSocket;
+        clientSocket = nullptr;
     }
 }
 
@@ -32,7 +33,8 @@ void Threaded_Client_Control::Start()
 {
     int r = pthread_create(&clientThread, nullptr, ClientThread, this);
     pthread_setname_np(clientThread, "ACCPTD_CLI");
-    if (!r) pthread_detach(clientThread);
+    if (!r) 
+        pthread_detach(clientThread);
 }
 
 void Threaded_Client_Control::StopSocket()
