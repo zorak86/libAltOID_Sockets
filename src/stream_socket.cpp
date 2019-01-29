@@ -18,7 +18,7 @@
 
 Stream_Socket::Stream_Socket()
 {
-	socketType = STREAM_SOCKET;
+    socketType = STREAM_SOCKET;
 }
 
 Stream_Socket::~Stream_Socket()
@@ -53,10 +53,10 @@ bool Stream_Socket::writeBlock(const char *data)
 bool Stream_Socket::writeBlock(const void *data, uint32_t datalen)
 {
     if (!isValidSocket()) return false;
-
+    
     int32_t sent_bytes = 0;
     int32_t left_to_send = datalen;
-
+    
     // Send the raw data.
     // datalen-left_to_send is the _size_ of the data already sent.
     while (left_to_send && (sent_bytes = partialWrite((const char *) data + (datalen - left_to_send), left_to_send>4096?4096:left_to_send)) <= left_to_send)
@@ -71,7 +71,7 @@ bool Stream_Socket::writeBlock(const void *data, uint32_t datalen)
         else
             left_to_send -= sent_bytes;
     }
-
+    
     // Failed to achieve sending the contect on 5 attempts
     if (left_to_send != 0)
     {
@@ -95,17 +95,17 @@ bool Stream_Socket::PostAcceptSubInitialization()
 bool Stream_Socket::readBlock(void *data, uint32_t datalen, uint32_t * bytesReceived)
 {
     if (bytesReceived) *bytesReceived = 0;
-
+    
     if (!isValidSocket())
     {
         return false;
     }
-
+    
     int total_recv_bytes = 0;
     int local_recv_bytes = 0;
-
+    
     if (datalen==0) return true;
-
+    
     // Try to receive the maximum amount of data left.
     while ( (datalen - total_recv_bytes)>0 // there are bytes to read.
             && (local_recv_bytes = partialRead(((char *) data) + total_recv_bytes, datalen - total_recv_bytes)) >0 // receive bytes. if error, will return with -1.
@@ -114,16 +114,16 @@ bool Stream_Socket::readBlock(void *data, uint32_t datalen, uint32_t * bytesRece
         // Count the data received.
         total_recv_bytes += local_recv_bytes;
     }
-
+    
     if ((unsigned int)total_recv_bytes<datalen)
     {
         if (total_recv_bytes==0) return false;
         if (bytesReceived) *bytesReceived = total_recv_bytes;
         return true;
     }
-
+    
     if (bytesReceived) *bytesReceived = datalen;
-
+    
     // Otherwise... return true.
     return true;
 }
@@ -131,7 +131,7 @@ bool Stream_Socket::readBlock(void *data, uint32_t datalen, uint32_t * bytesRece
 bool Stream_Socket::isConnected()
 {
     if (!isValidSocket()) return false;
-
+    
     struct sockaddr peer;
     socklen_t peer_len;
     peer_len = sizeof(peer);
@@ -144,13 +144,13 @@ bool Stream_Socket::isConnected()
 }
 
 bool Stream_Socket::listenOn(uint16_t port, const char* listenOnAddr,
-        bool useIPv4, int recvbuffer, unsigned int backlog)
+                             bool useIPv4, int recvbuffer, unsigned int backlog)
 {
-	return false;
+    return false;
 }
 
 bool Stream_Socket::connectTo(const char* hostname, uint16_t port,
-        uint32_t timeout)
+                              uint32_t timeout)
 {
-	return false;
+    return false;
 }
