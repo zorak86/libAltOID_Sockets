@@ -149,6 +149,12 @@ public:
      */
     std::string readString(bool *readOK=0x0, unsigned char sizel = 8);
     /**
+     * Write a std::string of maximum.
+     * @param str string to be sent.
+     * @return true if success
+     */
+    bool writeString32(const std::string & str, uint32_t maxSize);
+    /**
      * Write a std::string of maximum 65kb.
      * @param str string to be sent.
      * @return true if success

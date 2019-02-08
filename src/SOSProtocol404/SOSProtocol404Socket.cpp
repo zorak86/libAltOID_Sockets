@@ -390,6 +390,13 @@ string SOSProtocol404_Socket::readString(bool *readOK, unsigned char sizel)
     }
 }
 
+bool SOSProtocol404_Socket::writeString32(const string &str, uint32_t maxSize)
+{
+    if (!this->sock) return false;
+	if (str.size()>maxSize) return false;
+	return writeBlock32(str.c_str(), str.size());
+}
+
 bool SOSProtocol404_Socket::writeString16(const std::string& str)
 {
     if (!this->sock) return false;
