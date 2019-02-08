@@ -298,7 +298,7 @@ void* SOSProtocol404_Socket::readBlockWAlloc(uint32_t *datalen, unsigned char si
         lenReceived = (readU8(&readOK))+1;
     if (sizel==16)
         lenReceived = (readU16(&readOK))+1;
-    if (sizel==32)
+    if (sizel>16)
         lenReceived = (readU32(&readOK))+1;
 
     if (readOK)
